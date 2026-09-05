@@ -31,7 +31,7 @@ class BaseDatos {
             id INT UNSIGNED NOT NULL AUTO_INCREMENT,
             nombre VARCHAR(100) NOT NULL,
             precio DECIMAL(10,2) NOT NULL,
-            unidad VARCHAR(50) NOT NULL,
+            unidad  ENUM('unidad','kilo','litro','pack') NOT NULL DEFAULT 'unidad',
             categoria VARCHAR(100) NOT NULL,
             subcategoria VARCHAR(100) NOT NULL,
             fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
