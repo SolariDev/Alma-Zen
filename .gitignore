@@ -1,0 +1,21 @@
+# Ignorar subidas de medios y cachés
+uploads/
+upgrade/
+languages/
+cache/
+
+# Archivos temporales y del sistema
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+.vscode/
+
+.env
+
+themes/
+
+Docs/

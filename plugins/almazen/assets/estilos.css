@@ -1,0 +1,121 @@
+/* ===========================
+   Estilos generales
+   =========================== */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+h1, h2, h3 {
+  margin: 0.5rem 0;
+  font-weight: 600;
+  color: #333;
+}
+
+p {
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}
+
+/* ===========================
+   Contenedores principales
+   =========================== */
+.az-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.az-categorias,
+.az-lista-productos,
+.az-subcategorias {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* ===========================
+   Botones
+   =========================== */
+button,
+.az-btn {
+  background-color: #0073aa;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-weight: 500;
+}
+
+button:hover,
+.az-btn:hover {
+  background-color: #005f8d;
+}
+
+/* ===========================
+   Mensajes
+   =========================== */
+.az-mensaje {
+  text-align: center;
+  color: #555;
+  font-weight: 500;
+  margin: 1rem 0;
+}
+
+/* ===========================
+   Formularios
+   =========================== */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+input:focus {
+  border-color: #0073aa;
+  outline: none;
+}
+
+/* ===========================
+   Tablas (para admin)
+   =========================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+table th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+/* ===========================
+   Links
+   =========================== */
+a {
+  color: #0073aa;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #005f8d;
+  text-decoration: underline;
+}

@@ -1,0 +1,112 @@
+/* ===========================
+   Layout general de paneles
+   =========================== */
+.az-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* ===========================
+   Tarjetas de categorías
+   =========================== */
+.az-categorias,
+.az-subcategorias {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.az-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex: 1 1 200px;
+  max-width: 220px;
+}
+
+.az-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.az-card h3 {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  color: #333;
+}
+
+.az-icon {
+  max-width: 80px;
+  margin-bottom: 0.5rem;
+}
+
+/* ===========================
+   Lista de productos
+   =========================== */
+.az-lista-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.az-item {
+  background: #fff;
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.az-item h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+  color: #222;
+}
+
+.az-item p {
+  margin: 0.2rem 0;
+  color: #555;
+}
+
+.az-fecha {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* ===========================
+   Mensajes y alertas
+   =========================== */
+.az-mensaje {
+  text-align: center;
+  color: #555;
+  font-weight: 500;
+  margin: 1rem 0;
+}
+
+/* ===========================
+   Herramientas de administración
+   =========================== */
+.az-admin-tools {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.az-admin-tools .az-btn {
+  background-color: #444;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  transition: background 0.2s ease;
+}
+
+.az-admin-tools .az-btn:hover {
+  background-color: #222;
+}
