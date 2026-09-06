@@ -15,7 +15,7 @@ class BaseDatos {
         $charset_collate = $this->wpdb->get_charset_collate();
 
         // Tabla usuarios
-        $tabla_usuarios = $this->wpdb->prefix . 'az_usuarios';
+        $tabla_usuarios = $this->wpdb->prefix . 'alm_usuarios';
         $sql_usuarios = "CREATE TABLE $tabla_usuarios (
             id INT UNSIGNED NOT NULL AUTO_INCREMENT,
             nombre VARCHAR(100) NOT NULL,
@@ -26,7 +26,7 @@ class BaseDatos {
         ) $charset_collate;";
 
         // Tabla productos
-        $tabla_productos = $this->wpdb->prefix . 'az_productos';
+        $tabla_productos = $this->wpdb->prefix . 'alm_productos';
         $sql_productos = "CREATE TABLE $tabla_productos (
             id INT UNSIGNED NOT NULL AUTO_INCREMENT,
             nombre VARCHAR(100) NOT NULL,

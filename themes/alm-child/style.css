@@ -1,0 +1,26 @@
+/*
+Theme Name: Alma-Zen Child
+Theme URI: https://solaridev.com/almazen
+Description: Child Theme para la aplicación Alma-Zen.
+Author: Gabriel Solari - SolariDev
+Author URI: https://solaridev.com
+Template: hello-elementor
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: alm-child
+*/
+
+/* Importa estilos del padre */
+@import url("../hello-elementor/style.css");
+
+/* Ajustes globales iniciales */
+.entry-title,
+.elementor-page-title,
+.elementor-heading-title {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
