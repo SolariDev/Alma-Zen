@@ -1,121 +1,275 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
 /* ===========================
-   Estilos generales
+   Variables de color y tipografía
    =========================== */
+:root {
+  --az-celeste: #3BA9E0;
+  --az-verde: #4CAF50;
+  --az-amarillo: #FBC02D;
+  --az-naranja: #F57C00;
+  --az-gris-oscuro: #333333;
+  --az-fondo: #f9f9f9;
+  --az-tipografia: 'Montserrat', 'Segoe UI', 'Roboto', sans-serif;
+}
+
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background-color: #f5f5f5;
+  font-family: var(--az-tipografia);
+  background: var(--az-fondo);
+  color: var(--az-gris-oscuro);
   margin: 0;
   padding: 0;
-  color: #333;
 }
 
-h1, h2, h3 {
-  margin: 0.5rem 0;
-  font-weight: 600;
-  color: #333;
-}
-
-p {
-  margin: 0.5rem 0;
-  line-height: 1.4;
+header.site-header,
+.entry-title,
+.elementor-page-title {
+  display: none !important;
 }
 
 /* ===========================
-   Contenedores principales
+   Inicio
    =========================== */
-.az-panel {
-  max-width: 1200px;
-  margin: 0 auto;
+.az-inicio {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   padding: 2rem 1rem;
+  background: linear-gradient(135deg, var(--az-celeste), var(--az-verde));
 }
 
-.az-categorias,
-.az-lista-productos,
-.az-subcategorias {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 1rem;
+.az-logo img {
+  max-width: 220px;
+  margin-bottom: 40px;
 }
 
 /* ===========================
-   Botones
+   Botones mobile-first
    =========================== */
-button,
+.az-botones {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 280px;
+}
+
 .az-btn {
-  background-color: #0073aa;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  font-weight: 500;
-}
-
-button:hover,
-.az-btn:hover {
-  background-color: #005f8d;
-}
-
-/* ===========================
-   Mensajes
-   =========================== */
-.az-mensaje {
+  display: block;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-weight: bold;
   text-align: center;
-  color: #555;
-  font-weight: 500;
-  margin: 1rem 0;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: transform 0.1s ease;
+  border: none;
+  outline: none;
+}
+
+/* Colores institucionales */
+.az-btn:nth-child(1) {
+  background: var(--az-amarillo);
+  color: var(--az-gris-oscuro);
+}
+.az-btn:nth-child(2) {
+  background: var(--az-naranja);
+  color: var(--az-gris-oscuro);
+}
+.az-btn:nth-child(3) {
+  background: var(--az-celeste);
+  color: var(--az-gris-oscuro);
+}
+
+/* Efecto táctil */
+.az-btn:active,
+.az-btn:focus {
+  transform: scale(0.96);
+  opacity: 0.9;
 }
 
 /* ===========================
    Formularios
    =========================== */
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  font-size: 1rem;
+.az-form {
+  max-width: 360px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
-input:focus {
-  border-color: #0073aa;
+.az-form h2 {
+  font-family: var(--az-tipografia);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--az-gris-oscuro);
+}
+
+.az-form input[type="text"],
+.az-form input[type="email"],
+.az-form input[type="password"] {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: var(--az-tipografia);
+}
+
+.az-form input:focus {
+  border-color: var(--az-celeste);
   outline: none;
 }
 
-/* ===========================
-   Tablas (para admin)
-   =========================== */
-table {
+.az-form button[type="submit"],
+.az-form .az-btn {
   width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  background: var(--az-verde);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
 }
 
-table th,
-table td {
-  border: 1px solid #ddd;
-  padding: 0.6rem;
-  text-align: left;
-}
-
-table th {
-  background-color: #f0f0f0;
-  font-weight: 600;
+.az-form button[type="submit"]:active,
+.az-form .az-btn:active {
+  transform: scale(0.96);
+  opacity: 0.9;
 }
 
 /* ===========================
-   Links
+   Panel de administración
    =========================== */
-a {
-  color: #0073aa;
+.az-panel.az-admin {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.az-panel.az-admin h2 {
+  font-family: var(--az-tipografia);
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: var(--az-gris-oscuro);
+  text-align: center;
+}
+
+.az-panel.az-admin .az-logo img {
+  max-width: 140px;
+  display: block;
+  margin: 0 auto 1.5rem auto;
+}
+
+.az-categorias {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.az-card {
+  background: var(--az-fondo);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.az-card img.az-icon {
+  max-width: 60px;
+  margin-bottom: 0.8rem;
+}
+
+.az-card h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--az-gris-oscuro);
+}
+
+.az-admin-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto 2rem auto;
+}
+
+.az-admin-tools .az-btn:nth-child(1) {
+  background: var(--az-amarillo);
+  color: var(--az-gris-oscuro);
+}
+.az-admin-tools .az-btn:nth-child(2) {
+  background: var(--az-naranja);
+  color: var(--az-gris-oscuro);
+}
+
+.az-logout-form {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.az-logout-form .az-btn {
+  background: var(--az-celeste);
+  color: var(--az-gris-oscuro);
+  max-width: 220px;
+  text-align: center;
+  border: none;
+  outline: none;
+  transition: transform 0.1s ease, opacity 0.2s ease;
+}
+
+.az-logout-form .az-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+   background: var(--az-celeste);
+  color: var(--az-gris-oscuro);
+}
+
+.az-logout-form .az-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ===========================
+   Links en login
+   =========================== */
+.az-btn-volver {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--az-celeste);
   text-decoration: none;
 }
 
-a:hover {
-  color: #005f8d;
+.az-btn-volver:hover {
+  text-decoration: underline;
+}
+
+.az-login .az-btn-volver {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  color: var(--az-celeste);
+  text-decoration: none;
+}
+
+.az-login .az-btn-volver:hover {
   text-decoration: underline;
 }

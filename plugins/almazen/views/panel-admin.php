@@ -8,8 +8,12 @@ if (!$usuario) {
 }
 ?>
 
-<div class="az-panel">
-    <h2>Panel de administración - <?php echo esc_html($usuario['nombre']); ?></h2>
+<div class="az-panel az-admin">
+    <div class="az-logo">
+        <img src="<?php echo ALMAZEN_URL . 'assets/img/logo-az.png'; ?>" alt="Alma-Zen" />
+    </div>
+
+    <h2>Panel de administración</h2>
 
     <div class="az-categorias">
         <?php
@@ -22,7 +26,7 @@ if (!$usuario) {
 
         foreach ($categorias as $cat) {
             echo '<div class="az-card" data-categoria="' . esc_attr($cat['slug']) . '">';
-            echo '<img src="' . ALMAZEN_URL . 'assets/img/iconos/' . $cat['slug'] . '.png" alt="' . esc_attr($cat['nombre']) . '" class="az-icon">';
+            echo '<img src="' . ALMAZEN_URL . 'assets/img/' . $cat['slug'] . '.png" alt="' . esc_attr($cat['nombre']) . '" class="az-icon">';
             echo '<h3>' . esc_html($cat['nombre']) . '</h3>';
             echo '</div>';
         }
@@ -31,12 +35,12 @@ if (!$usuario) {
 
     <div id="az-contenedor-productos"></div>
 
-    <div class="az-admin-tools">
+    <div class="az-botones az-admin-tools">
         <a href="<?php echo esc_url(home_url('/editar-productos')); ?>" class="az-btn">Gestionar productos</a>
         <a href="<?php echo esc_url(home_url('/lista-productos')); ?>" class="az-btn">Lista completa</a>
     </div>
 
-    <form method="post">
+    <form method="post" class="az-logout-form">
         <button type="submit" name="logout" class="az-btn">Cerrar sesión</button>
     </form>
 </div>

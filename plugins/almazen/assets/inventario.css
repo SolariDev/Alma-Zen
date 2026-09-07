@@ -30,11 +30,6 @@
   max-width: 220px;
 }
 
-.az-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
 .az-card h3 {
   font-size: 1rem;
   margin-top: 0.5rem;
@@ -95,18 +90,13 @@
 .az-admin-tools {
   margin-top: 2rem;
   display: flex;
-  gap: 1rem;
+  flex-direction: column; /* coherente con estilos.css */
+  gap: 20px;
   justify-content: center;
 }
 
 .az-admin-tools .az-btn {
-  background-color: #444;
-  color: #fff;
   border-radius: 6px;
   padding: 0.6rem 1rem;
-  transition: background 0.2s ease;
-}
-
-.az-admin-tools .az-btn:hover {
-  background-color: #222;
+  transition: transform 0.2s ease;
 }
