@@ -89,38 +89,14 @@ add_shortcode('az_panel_admin', function () {
     return ob_get_clean();
 });
 
-add_shortcode('az_alimentos_bebidas', function () {
+add_shortcode('az_registrar_producto', function () {
     ob_start();
-    include ALMAZEN_PATH . 'views/alimentos-bebidas.php';
+    include ALMAZEN_PATH . 'views/registrar-producto.php';
     return ob_get_clean();
 });
 
-add_shortcode('az_higiene_limpieza', function () {
+add_shortcode('az_editar_producto', function () {
     ob_start();
-    include ALMAZEN_PATH . 'views/higiene-limpieza.php';
-    return ob_get_clean();
-});
-
-add_shortcode('az_mascotas', function () {
-    ob_start();
-    include ALMAZEN_PATH . 'views/mascotas.php';
-    return ob_get_clean();
-});
-
-add_shortcode('az_kiosco', function () {
-    ob_start();
-    include ALMAZEN_PATH . 'views/kiosco.php';
-    return ob_get_clean();
-});
-
-add_shortcode('az_lista', function () {
-    ob_start();
-    include ALMAZEN_PATH . 'views/lista-productos.php';
-    return ob_get_clean();
-});
-
-add_shortcode('az_admin', function () {
-    ob_start();
-    include ALMAZEN_PATH . 'views/editar-productos.php';
+    include ALMAZEN_PATH . 'views/editar-producto.php';
     return ob_get_clean();
 });

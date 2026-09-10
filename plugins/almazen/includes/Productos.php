@@ -10,14 +10,18 @@ class Productos {
     public function __construct() {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->tabla = $this->wpdb->prefix . 'az_productos';
+        $this->tabla = 'az_alm_productos';
     }
 
-    public function obtenerPorSubcategoria(string $subcat): array {
+    public function obtenerTodos(): array {
+        return $this->wpdb->get_results("SELECT * FROM {$this->tabla} ORDER BY nombre ASC", ARRAY_A);
+    }
+
+    public function buscarPorNombre(string  $nombre): array {
         return $this->wpdb->get_results(
             $this->wpdb->prepare(
-                "SELECT nombre, precio, fecha_actualizacion FROM {$this->tabla} WHERE subcategoria = %s ORDER BY nombre ASC",
-                $subcat
+                "SELECT * FROM {$this->tabla} WHERE nombre = BINARY %s ORDER BY nombre ASC",
+                $nombre
             ),
             ARRAY_A
         );

@@ -4,12 +4,11 @@
    Variables de color y tipografía
    =========================== */
 :root {
-  --az-celeste: #3BA9E0;
+  --az-celeste: #2196F3;
   --az-verde: #4CAF50;
-  --az-amarillo: #FBC02D;
+  --az-verde-oscuro: #2E7D32;
   --az-naranja: #F57C00;
   --az-gris-oscuro: #333333;
-  --az-fondo: #f9f9f9;
   --az-tipografia: 'Montserrat', 'Segoe UI', 'Roboto', sans-serif;
 }
 
@@ -69,17 +68,16 @@ header.site-header,
   outline: none;
 }
 
-/* Colores institucionales */
 .az-btn:nth-child(1) {
-  background: var(--az-amarillo);
+  background: var(--az-verde);
   color: var(--az-gris-oscuro);
 }
 .az-btn:nth-child(2) {
-  background: var(--az-naranja);
+  background: var(--az-verde-oscuro);
   color: var(--az-gris-oscuro);
 }
 .az-btn:nth-child(3) {
-  background: var(--az-celeste);
+  background: var(--az-naranja);
   color: var(--az-gris-oscuro);
 }
 
@@ -154,9 +152,9 @@ header.site-header,
   max-width: 960px;
   margin: 2rem auto;
   padding: 2rem;
-  background: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 16px var(--az-gris-oscuro, 0.1);
+  background: linear-gradient(135deg, var(--az-celeste), var(--az-verde));
 }
 
 .az-panel.az-admin h2 {
@@ -173,33 +171,49 @@ header.site-header,
   margin: 0 auto 1.5rem auto;
 }
 
-.az-categorias {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+.az-card {
+  border-radius: 40px;
+  padding: 0;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(51, 51, 51, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  max-width: 260px;
+  margin: 0 auto 2rem auto;
+  background: none;
+  overflow: hidden;
+  min-height: none;
+  min-width: none;
 }
 
-.az-card {
-  background: var(--az-fondo);
-  border-radius: 10px;
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease;
-  cursor: pointer;
+.az-card a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 40px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(135deg, var(--az-verde), var(--az-celeste));
+}
+
+.az-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(51, 51, 51, 0.3);
 }
 
 .az-card img.az-icon {
-  max-width: 60px;
-  margin-bottom: 0.8rem;
+  max-width: 100px;
+  margin-bottom: 1rem;
 }
 
 .az-card h3 {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--az-gris-oscuro);
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--az-gris-oscuro); 
 }
+
+
 
 .az-admin-tools {
   display: flex;
@@ -211,11 +225,7 @@ header.site-header,
 }
 
 .az-admin-tools .az-btn:nth-child(1) {
-  background: var(--az-amarillo);
-  color: var(--az-gris-oscuro);
-}
-.az-admin-tools .az-btn:nth-child(2) {
-  background: var(--az-naranja);
+  background: var(--az-verde);
   color: var(--az-gris-oscuro);
 }
 
@@ -238,7 +248,7 @@ header.site-header,
 .az-logout-form .az-btn:hover {
   opacity: 0.9;
   transform: scale(1.05);
-   background: var(--az-celeste);
+  background: var(--az-celeste);
   color: var(--az-gris-oscuro);
 }
 
@@ -273,3 +283,154 @@ header.site-header,
 .az-login .az-btn-volver:hover {
   text-decoration: underline;
 }
+
+/* ===========================
+   Buscador de productos
+   =========================== */
+.az-form-buscar {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem auto 2rem auto;
+  max-width: 400px;
+}
+
+.az-form-buscar input[type="text"] {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.az-form-buscar .az-btn {
+  background: var(--az-verde-oscuro);
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.az-form-buscar .az-btn:hover,
+.az-form-buscar .az-btn:focus {
+  background: var(--az-verde);
+  border: none;
+  outline: none;
+}
+
+.az-form-buscar .az-icon-buscar {
+  max-width: 20px;
+}
+
+/* ===========================
+   Edición de producto
+   =========================== */
+.az-form-editar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.az-form-editar label {
+  font-weight: 600;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.az-form-editar input,
+.az-form-editar select {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+/* Botones de acciones dentro de la tarjeta */
+.az-admin-tools {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.az-admin-tools .az-btn {
+  flex: 1;
+  margin: 0 0.4rem;
+  padding: 0.8rem;
+  border-radius: 6px;
+  text-align: center;
+  background: var(--az-celeste);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.az-admin-tools .az-btn:hover,
+.az-admin-tools .az-btn:focus {
+  background: var(--az-verde);
+  outline: none;
+}
+
+.az-titulo-editar {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--az-gris-oscuro); 
+}
+
+/* Botón Eliminar → naranja */
+.az-admin-tools .az-btn.eliminar {
+  background: var(--az-naranja);
+}
+
+/* Botón Eliminar → naranja */
+.az-admin-tools .az-btn.eliminar {
+  background: var(--az-naranja);
+}
+
+/* Botón Volver al panel → verde oscuro */
+.az-admin-tools .az-btn.volver {
+  background: var(--az-verde-oscuro);
+}
+
+.az-mensaje-exito {
+  background: var(--az-verde);
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+/* ===========================
+   Volver al panel (icono)
+   =========================== */
+ .btn-volver-panel {
+  position: fixed;
+  bottom: 1.2rem;
+  right: 1.2rem;
+  width: 56px;
+  height: 56px;
+  background: var(--az-verde-oscuro);
+  border-radius: 50%;
+  display: none; /* oculto al inicio */
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.6rem;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  z-index: 999;
+}
+
+.btn-volver-panel .icon-arrow-left::before {
+  content: "←"; /* podés reemplazar por un SVG más elegante */
+}
+  

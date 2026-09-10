@@ -30,15 +30,16 @@ class BaseDatos {
         $sql_productos = "CREATE TABLE $tabla_productos (
             id INT UNSIGNED NOT NULL AUTO_INCREMENT,
             nombre VARCHAR(100) NOT NULL,
-            precio DECIMAL(10,2) NOT NULL,
-            unidad  ENUM('unidad','kilo','litro','pack') NOT NULL DEFAULT 'unidad',
-            categoria VARCHAR(100) NOT NULL,
-            subcategoria VARCHAR(100) NOT NULL,
-            fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-            PRIMARY KEY  (id),
-            INDEX idx_nombre (nombre),
-            INDEX idx_categoria (categoria),
-            INDEX idx_subcategoria (subcategoria)
+            precio INT UNSIGNED NOT NULL DEFAULT 0,
+            cantidad DECIMAL(6,2) NOT NULL, 
+            unidad ENUM('ml','lt','gr','kg','unidad') NOT NULL DEFAULT 'unidad',
+            empaque ENUM('','pack6','pack12','bolsa','tarrina','otro') DEFAULT '',
+            marca VARCHAR(100) DEFAULT '',
+            proveedor VARCHAR(100) DEFAULT '',
+            categoria VARCHAR(100) DEFAULT '',
+            fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            INDEX idx_nombre (nombre)
         ) $charset_collate;";
 
         dbDelta($sql_usuarios);

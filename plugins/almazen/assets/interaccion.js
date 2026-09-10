@@ -1,13 +1,13 @@
 /**
  * Interacción dinámica optimizada para Alma-Zen
- * - Manejo de clic en tarjetas de categorías y subcategorías
  * - Búsqueda dinámica con debounce
  * - Filtros con AJAX
+ * - Botón flotante "Volver al panel" al hacer scroll
  */
 
 jQuery(document).ready(function ($) {
 
-    // Función genérica para peticiones AJAX
+    // 🔹 Función genérica para peticiones AJAX
     function cargarVista(data) {
         $.ajax({
             url: az_ajax.url,
@@ -22,25 +22,7 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    // Al hacer clic en una tarjeta de categoría → cargar subcategorías
-    $('.az-card').on('click', function () {
-        const categoria = $(this).data('categoria');
-        cargarVista({
-            action: 'az_obtener_subcategorias',
-            categoria: categoria
-        });
-    });
-
-    // Al hacer clic en una tarjeta de subcategoría → cargar productos
-    $(document).on('click', '.az-subcard', function () {
-        const subcat = $(this).data('subcat');
-        cargarVista({
-            action: 'az_obtener_productos',
-            subcat: subcat
-        });
-    });
-
-    // Búsqueda dinámica con debounce
+    // 🔹 Búsqueda dinámica con debounce
     let debounceTimer;
     $('#az-busqueda').on('keyup', function () {
         clearTimeout(debounceTimer);
@@ -56,7 +38,20 @@ jQuery(document).ready(function ($) {
                 action: 'az_buscar_productos',
                 termino: termino
             });
-        }, 300);
+        }, 300); // espera 300ms antes de disparar la búsqueda
     });
+
+    // 🔹 Botón flotante "Volver al panel"
+    const $btnFlotante = $('.btn-volver-panel'); // usar jQuery para asegurar compatibilidad
+
+    if ($btnFlotante.length) {
+        $(window).on('scroll', function () {
+            if ($(this).scrollTop() > 100) {
+                $btnFlotante.css('display', 'flex'); // aparece flotante
+            } else {
+                $btnFlotante.css('display', 'none'); // se oculta
+            }
+        });
+    }
 
 });
