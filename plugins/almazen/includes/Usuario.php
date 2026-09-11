@@ -31,5 +31,4 @@ class Usuario {
         $sql = "SELECT * FROM {$this->tabla_productos} ORDER BY fecha_actualizacion DESC";
         return $this->wpdb->get_results($sql, ARRAY_A);
     }
-}
-  
+}  

@@ -1,13 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
 
-/* ===========================
-   Variables de color y tipografía
-   =========================== */
 :root {
   --az-celeste: #2196F3;
   --az-verde: #4CAF50;
   --az-verde-oscuro: #2E7D32;
-  --az-naranja: #F57C00;
+  --az-rojo: #471c8b;
   --az-gris-oscuro: #333333;
   --az-tipografia: 'Montserrat', 'Segoe UI', 'Roboto', sans-serif;
 }
@@ -26,9 +23,8 @@ header.site-header,
   display: none !important;
 }
 
-/* ===========================
-   Inicio
-   =========================== */
+/* == Página Inicio == */
+
 .az-inicio {
   display: flex;
   flex-direction: column;
@@ -44,9 +40,6 @@ header.site-header,
   margin-bottom: 40px;
 }
 
-/* ===========================
-   Botones mobile-first
-   =========================== */
 .az-botones {
   display: flex;
   flex-direction: column;
@@ -58,7 +51,7 @@ header.site-header,
 .az-btn {
   display: block;
   padding: 14px 24px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: bold;
   text-align: center;
   text-decoration: none;
@@ -68,29 +61,35 @@ header.site-header,
   outline: none;
 }
 
-.az-btn:nth-child(1) {
+.az-btn.usuario {
   background: var(--az-verde);
-  color: var(--az-gris-oscuro);
+  color: #fff;
 }
-.az-btn:nth-child(2) {
+
+.az-btn.admin {
   background: var(--az-verde-oscuro);
-  color: var(--az-gris-oscuro);
-}
-.az-btn:nth-child(3) {
-  background: var(--az-naranja);
-  color: var(--az-gris-oscuro);
+  color: #fff;
 }
 
-/* Efecto táctil */
-.az-btn:active,
-.az-btn:focus {
-  transform: scale(0.96);
-  opacity: 0.9;
+.az-btn.login {
+  background: var(--az-rojo);
+  color: #fff;
 }
 
-/* ===========================
-   Formularios
-   =========================== */
+/* Bounce en botones */
+button:hover,
+.az-btn:hover {
+  animation: bounce 0.4s;
+}
+@keyframes bounce {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-4px); }
+  60%  { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+/* ==Registrar usuario == */
+
 .az-form {
   max-width: 360px;
   margin: 3rem auto;
@@ -108,9 +107,8 @@ header.site-header,
   color: var(--az-gris-oscuro);
 }
 
-.az-form input[type="text"],
-.az-form input[type="email"],
-.az-form input[type="password"] {
+.az-form input,
+.az-form select {
   width: 100%;
   padding: 0.8rem;
   margin-bottom: 1rem;
@@ -120,35 +118,68 @@ header.site-header,
   font-family: var(--az-tipografia);
 }
 
-.az-form input:focus {
+.az-form input:focus,
+.az-form select:focus {
   border-color: var(--az-celeste);
   outline: none;
 }
 
-.az-form button[type="submit"],
-.az-form .az-btn {
+.az-form .az-btn.login {
   width: 100%;
-  padding: 0.8rem;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 1rem;
+  max-width: 320px;
+  margin: 0 auto;
+  display: block;
+  font-family: var(--az-tipografia);
+  border: none;
+  outline: none;
+}
+
+.az-form .az-btn.admin {
+  width: 100%;
+  max-width: 320px;
+  margin: 20px auto 0;
+  display: block;
+  text-align: center;
+}
+
+/* == Login == */
+
+.az-mensaje {
+  text-align: center;
+  color: #555;
+  font-weight: 500;
+  margin: 1rem 0;
+}
+
+.az-mensaje-exito {
   background: var(--az-verde);
   color: #fff;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.1s ease;
+  font-weight: 600;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
 }
 
-.az-form button[type="submit"]:active,
-.az-form .az-btn:active {
-  transform: scale(0.96);
-  opacity: 0.9;
+.az-btn.link {
+  background: none;
+  color: #2196F3;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 1rem;
 }
 
-/* ===========================
-   Panel de administración
-   =========================== */
+.az-btn.link:hover {
+  color: red;
+  text-decoration: underline;
+}
+
+/* == Panel de administración == */
+
 .az-panel.az-admin {
+  text-align: center;
   max-width: 960px;
   margin: 2rem auto;
   padding: 2rem;
@@ -172,29 +203,13 @@ header.site-header,
 }
 
 .az-card {
-  border-radius: 40px;
-  padding: 0;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(51, 51, 51, 0.2);
+  display: inline-block;
+  vertical-align: top;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
-  max-width: 260px;
-  margin: 0 auto 2rem auto;
-  background: none;
-  overflow: hidden;
-  min-height: none;
-  min-width: none;
-}
-
-.az-card a {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 40px;
-  padding: 1.5rem;
-  text-decoration: none;
-  color: inherit;
-  background: linear-gradient(135deg, var(--az-verde), var(--az-celeste));
+  cursor: pointer;  
+  margin: 0 1rem 2rem 1rem;
+  min-width: 180px;
+  max-width: 200px;   
 }
 
 .az-card:hover {
@@ -208,12 +223,125 @@ header.site-header,
 }
 
 .az-card h3 {
-  font-size: 3rem;
+  font-size: 1.8rem;
   font-weight: 800;
   color: var(--az-gris-oscuro); 
 }
 
+.az-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(51, 51, 51, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
+.az-icon {
+  max-width: 80px;
+  margin-bottom: 0.5rem;
+}
+
+/* Animación de entrada en paneles */
+.az-panel {
+  animation: slideUp 0.6s ease-out;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.az-logout-form {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.az-logout-form .az-btn {
+  background: var(--az-verde-oscuro);
+  color: var(--az-gris-oscuro);
+  border-radius: 12px;
+  max-width: 220px;
+  text-align: center;
+  border: none;
+  outline: none;
+  transition: transform 0.1s ease, opacity 0.2s ease;
+  font-family: var(--az-tipografia);
+  font-weight: 600; 
+}
+
+.az-logout-form .az-btn:hover {
+  opacity: 0.9;
+  background: var(--az-rojo);
+  color: #fff;  
+}
+
+.az-logout-form .az-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* == Editar producto == */
+
+.az-titulo-editar {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--az-gris-oscuro); 
+}
+
+.az-form-buscar {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem auto 2rem auto;
+  max-width: 400px;
+}
+.az-form-buscar input[type="text"] {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.az-form-buscar .az-btn {
+  background: var(--az-verde-oscuro);
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+}
+
+.az-form-buscar .az-btn:hover,
+.az-form-buscar .az-btn:focus {
+  background: var(--az-verde);
+}
+
+.az-form-buscar .az-icon-buscar {
+  max-width: 32px;
+}
+
+ .btn-volver-panel {
+  position: fixed;
+  bottom: 1.2rem;
+  right: 1.2rem;
+  width: 56px;
+  height: 56px;
+  background: var(--az-verde-oscuro);
+  border-radius: 50%;
+  display: none; /* oculto al inicio */
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.6rem;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  z-index: 999;
+}
+
+.btn-volver-panel .icon-arrow-left::before {
+  content: "←"; 
+}
 
 .az-admin-tools {
   display: flex;
@@ -224,110 +352,29 @@ header.site-header,
   margin: 0 auto 2rem auto;
 }
 
-.az-admin-tools .az-btn:nth-child(1) {
-  background: var(--az-verde);
-  color: var(--az-gris-oscuro);
-}
-
-.az-logout-form {
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-.az-logout-form .az-btn {
-  background: var(--az-celeste);
-  color: var(--az-gris-oscuro);
-  max-width: 220px;
-  text-align: center;
-  border: none;
-  outline: none;
-  transition: transform 0.1s ease, opacity 0.2s ease;
-}
-
-.az-logout-form .az-btn:hover {
-  opacity: 0.9;
-  transform: scale(1.05);
-  background: var(--az-celeste);
-  color: var(--az-gris-oscuro);
-}
-
-.az-logout-form .az-btn:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-/* ===========================
-   Links en login
-   =========================== */
-.az-btn-volver {
-  display: inline-block;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: var(--az-celeste);
-  text-decoration: none;
-}
-
-.az-btn-volver:hover {
-  text-decoration: underline;
-}
-
-.az-login .az-btn-volver {
-  display: inline-block;
-  margin-top: 0.8rem;
-  font-size: 0.9rem;
-  color: var(--az-celeste);
-  text-decoration: none;
-}
-
-.az-login .az-btn-volver:hover {
-  text-decoration: underline;
-}
-
-/* ===========================
-   Buscador de productos
-   =========================== */
-.az-form-buscar {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin: 1rem auto 2rem auto;
-  max-width: 400px;
-}
-
-.az-form-buscar input[type="text"] {
+.az-admin-tools .az-btn {
   flex: 1;
-  padding: 0.6rem;
-  border: 1px solid #ccc;
+  margin: 0 0.4rem;
+  padding: 0.8rem;
   border-radius: 6px;
-  font-size: 1rem;
-}
-
-.az-form-buscar .az-btn {
+  text-align: center;
   background: var(--az-verde-oscuro);
+  color: #fff;
+  font-weight: 600;
   border: none;
-  border-radius: 6px;
-  padding: 0.6rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
 }
 
-.az-form-buscar .az-btn:hover,
-.az-form-buscar .az-btn:focus {
+.az-admin-tools .az-btn:hover,
+.az-admin-tools .az-btn:focus {
   background: var(--az-verde);
-  border: none;
   outline: none;
 }
 
-.az-form-buscar .az-icon-buscar {
-  max-width: 20px;
+.az-admin-tools .az-btn.eliminar {
+  background: var(--az-rojo);
 }
 
-/* ===========================
-   Edición de producto
-   =========================== */
 .az-form-editar {
   display: flex;
   flex-direction: column;
@@ -351,86 +398,7 @@ header.site-header,
   width: 100%;
 }
 
-/* Botones de acciones dentro de la tarjeta */
-.az-admin-tools {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-}
-
-.az-admin-tools .az-btn {
-  flex: 1;
-  margin: 0 0.4rem;
-  padding: 0.8rem;
-  border-radius: 6px;
-  text-align: center;
-  background: var(--az-celeste);
+.az-btn.eliminar {
+  background: var(--az-rojo);
   color: #fff;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
 }
-
-.az-admin-tools .az-btn:hover,
-.az-admin-tools .az-btn:focus {
-  background: var(--az-verde);
-  outline: none;
-}
-
-.az-titulo-editar {
-  text-align: center;
-  font-size: 2.4rem;
-  font-weight: 700;
-  color: var(--az-gris-oscuro); 
-}
-
-/* Botón Eliminar → naranja */
-.az-admin-tools .az-btn.eliminar {
-  background: var(--az-naranja);
-}
-
-/* Botón Eliminar → naranja */
-.az-admin-tools .az-btn.eliminar {
-  background: var(--az-naranja);
-}
-
-/* Botón Volver al panel → verde oscuro */
-.az-admin-tools .az-btn.volver {
-  background: var(--az-verde-oscuro);
-}
-
-.az-mensaje-exito {
-  background: var(--az-verde);
-  color: #fff;
-  font-weight: 600;
-  text-align: center;
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-}
-
-/* ===========================
-   Volver al panel (icono)
-   =========================== */
- .btn-volver-panel {
-  position: fixed;
-  bottom: 1.2rem;
-  right: 1.2rem;
-  width: 56px;
-  height: 56px;
-  background: var(--az-verde-oscuro);
-  border-radius: 50%;
-  display: none; /* oculto al inicio */
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 1.6rem;
-  text-decoration: none;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-  z-index: 999;
-}
-
-.btn-volver-panel .icon-arrow-left::before {
-  content: "←"; /* podés reemplazar por un SVG más elegante */
-}
-  

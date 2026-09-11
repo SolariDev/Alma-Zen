@@ -6,10 +6,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Paso 1: usuario ingresa email
         $usuario = $auth->usuarioPorEmail($_POST['email']);
         if ($usuario) {
-            echo '<form method="post" action="">
+            echo '<form method="post" action="" class="az-form">
                     <input type="hidden" name="email" value="' . esc_attr($_POST['email']) . '">
                     <input type="password" name="nueva_password" placeholder="Nueva contraseña" required>
-                    <button type="submit">Actualizar contraseña</button>
+                    <button type="submit" class="az-btn login">Actualizar contraseña</button>
                   </form>';
         } else {
             echo '<p class="az-mensaje">El email no está registrado.</p>';
@@ -28,10 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <div class="az-form">
+
+    <div class="az-logo">
+        <img src="<?php echo ALMAZEN_URL . 'assets/img/logo-almazen.png'; ?>" alt="Alma-Zen" />
+    </div>
     <h2>Recuperar contraseña</h2>
     <form method="post" action="">
         <input type="email" name="email" placeholder="Tu email registrado" required>
-        <button type="submit">Continuar</button>
+        <button type="submit" class="az-btn login">Continuar</button>
     </form>
-    <a href="<?php echo esc_url(home_url('/inicio')); ?>" class="az-btn-volver">Volver al inicio</a>
+    <a href="<?php echo esc_url(home_url('/inicio')); ?>" class="az-btn admin">Volver al inicio</a>
 </div>

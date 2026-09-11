@@ -28,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="az_admin_nombre" placeholder="Nombre" autocomplete="off" required>
         <input type="email" name="az_admin_email" placeholder="Email" autocomplete="off" required>
         <input type="password" name="az_admin_password" placeholder="Contraseña" autocomplete="new-password" required>
-        <button type="submit" class="az-btn">Registrar admin</button>
+        <button type="submit" class="az-btn login">Registrar admin</button>
     </form>
 
-    <a href="<?php echo esc_url(home_url('/inicio')); ?>" class="az-btn-volver">Volver al inicio</a>
+    <a href="<?php echo esc_url(home_url('/inicio')); ?>" class="az-btn admin">Volver al inicio</a>
 </div>

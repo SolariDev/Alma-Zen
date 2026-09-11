@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="az-form az-login">
+<div class="az-form">
     <div class="az-logo">
         <img src="<?php echo ALMAZEN_URL . 'assets/img/logo-az.png'; ?>" alt="Alma-Zen" />
     </div>
@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="post" action="">
         <input type="email" name="az_login_email" placeholder="Email" autocomplete="off" required>
         <input type="password" name="az_login_password" placeholder="Contraseña" autocomplete="new-password" required>
-        <button type="submit" class="az-btn">Entrar</button>
+        <button type="submit" class="az-btn login">Entrar</button>
     </form>
 
-    <a href="<?php echo esc_url(home_url('/inicio')); ?>" class="az-btn-volver">Volver al inicio</a><br>
-    <a href="<?php echo esc_url(home_url('/cambiar-password')); ?>" class="az-btn-volver">¿Olvidaste tu contraseña?</a>
+    <a href="<?php echo esc_url(home_url('/inicio')); ?>" class="az-btn admin">Volver al inicio</a><br>
+    <a href="<?php echo esc_url(home_url('/recuperar-password')); ?>" class="az-btn link">¿Olvidaste tu contraseña?</a>
 </div>

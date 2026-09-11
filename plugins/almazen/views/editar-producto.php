@@ -83,7 +83,7 @@ if (isset($_GET['q'])) {
     </form>
 
     <div class="az-admin-tools">
-        <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn volver">Volver al panel</a>
+        <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn admin">Volver al panel</a>
     </div>
 
     <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="btn-volver-panel" title="Volver al panel"><span class="icon-arrow-left"></span></a>

@@ -72,11 +72,11 @@ if ( isset($_POST['guardar_producto']) ) {
         </div>
 
         <?php if ($producto_guardado): ?>
-            <a href="<?php echo esc_url(home_url('/registrar-producto')); ?>" class="az-btn">Registrar otro producto</a>
+            <a href="<?php echo esc_url(home_url('/registrar-producto')); ?>" class="az-btn login">Registrar otro producto</a>
         <?php endif; ?>
     </form>
 
     <div class="az-admin-tools">
-        <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn volver">Volver al panel</a>
+        <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn admin">Volver al panel</a>
     </div>    
 </div>
