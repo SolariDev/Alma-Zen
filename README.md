@@ -7,23 +7,21 @@ Su objetivo es ofrecer una gestión clara y escalable de productos, con una inte
 
 - **Roles de usuario**:
   - **Administrador**: CRUD completo de productos (crear, editar, eliminar).
-  - **Usuario**: acceso de lectura a categorías y precios.
+  - **Usuario**: acceso de lectura a cada producto con sus datos relevantes.
 
 - **Gestión de productos**:
-  - Categorización por rubros y subcategorías.
-  - Precios configurables con unidad de medida controlada:
-    - `unidad`, `kilo`, `litro`, `pack`.
+  - Cada producto se registra con sus datos relevantes por el admin.
+  - Buscador de productos por nombre.
   - Registro automático de fecha de última actualización.
 
 - **Interfaz modular**:
   - Panel de usuario y panel de administración diferenciados.
-  - Vistas dinámicas con AJAX para subcategorías y productos.
+  - Vistas dinámicas con AJAX para productos.
   - Estilos consistentes y animaciones modernas.
 
 - **Arquitectura escalable**:
   - Separación clara entre frontend (`views/`) y backend (`includes/`).
   - Consultas centralizadas en clases PHP.
-  - CSS modular (`estilos.css`, `inventario.css`, `animaciones.css`).
 
 ## 📦 Estado del proyecto
 
