@@ -15,7 +15,7 @@ $mensaje = '';
 if (isset($_POST['guardar'])) {
     $id        = intval($_POST['id']);
     $nombre    = sanitize_text_field($_POST['nombre']);
-    $precio    = intval($_POST['precio']);
+    $precio    = intval(str_replace('$','', $_POST['precio']));
     $cantidad  = floatval($_POST['cantidad']);
     $unidad    = sanitize_text_field($_POST['unidad']);
     $empaque   = sanitize_text_field($_POST['empaque']);
@@ -24,7 +24,7 @@ if (isset($_POST['guardar'])) {
     $categoria = sanitize_text_field($_POST['categoria']);
 
     global $wpdb;
-    $tabla = 'az_alm_productos';
+    $tabla = $wpdb->prefix . 'alm_productos';
     $wpdb->update(
         $tabla,
         [
@@ -52,7 +52,7 @@ if (isset($_POST['eliminar'])) {
     $tabla = $wpdb->prefix . 'alm_productos';
     $wpdb->delete($tabla, ['id' => $id], ['%d']);
     $mensaje = '🗑️ Producto eliminado correctamente.';
-    $producto = null; // ya no mostrar tarjeta
+    $producto = null;
 }
 
 // Si se envió búsqueda
@@ -95,8 +95,11 @@ if (isset($_GET['q'])) {
         <label>Nombre</label>
         <input type="text" name="nombre" value="<?php echo esc_attr($producto['nombre']); ?>" required>
 
+        <label>Marca</label>
+        <input type="text" name="marca" value="<?php echo esc_attr($producto['marca'] ?? ''); ?>">
+
         <label>Precio</label>
-        <input type="number" name="precio" step="1" min="0" value="<?php echo esc_attr($producto['precio']); ?>" required>
+        <input type="text" name="precio" value="<?php echo "$" . esc_attr($producto['precio']); ?>" required>
 
         <label>Cantidad</label>
         <input type="number" name="cantidad" step="0.01" value="<?php echo esc_attr($producto['cantidad']); ?>" required>
@@ -113,15 +116,13 @@ if (isset($_GET['q'])) {
         <label>Empaque / Presentación</label>
         <select name="empaque">
             <option value="" <?php selected($producto['empaque'], ''); ?>>Sin empaque</option>
+            <option value="pack4" <?php selected($producto['empaque'], 'pack4'); ?>>Pack de 4</option>
             <option value="pack6" <?php selected($producto['empaque'], 'pack6'); ?>>Pack de 6</option>
             <option value="pack12" <?php selected($producto['empaque'], 'pack12'); ?>>Pack de 12</option>
             <option value="bolsa" <?php selected($producto['empaque'], 'bolsa'); ?>>Bolsa</option>
             <option value="tarrina" <?php selected($producto['empaque'], 'tarrina'); ?>>Tarrina</option>
             <option value="caja" <?php selected($producto['empaque'], 'caja'); ?>>Caja</option>
         </select>
-
-        <label>Marca</label>
-        <input type="text" name="marca" value="<?php echo esc_attr($producto['marca'] ?? ''); ?>">
 
         <label>Proveedor</label>
         <input type="text" name="proveedor" value="<?php echo esc_attr($producto['proveedor'] ?? ''); ?>">

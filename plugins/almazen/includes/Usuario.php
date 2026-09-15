@@ -10,7 +10,7 @@ class Usuario {
     public function __construct() {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->tabla_productos = 'az_alm_productos';
+        $this->tabla_productos = $this->wpdb->prefix . 'alm_productos';
     }
 
     /**

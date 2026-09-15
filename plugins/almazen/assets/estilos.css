@@ -33,6 +33,10 @@ header.site-header,
   min-height: 100vh;
   padding: 2rem 1rem;
   background: linear-gradient(135deg, var(--az-celeste), var(--az-verde));
+  max-width: 960px;
+  margin: 2rem auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--az-gris-oscuro, 0.1);
 }
 
 .az-logo img {
@@ -147,8 +151,11 @@ button:hover,
 .az-mensaje {
   text-align: center;
   color: #555;
-  font-weight: 500;
+  font-weight: 600;
   margin: 1rem 0;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .az-mensaje-exito {
@@ -159,6 +166,9 @@ button:hover,
   padding: 1rem;
   border-radius: 6px;
   margin-bottom: 1rem;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .az-btn.link {
@@ -203,11 +213,12 @@ button:hover,
 }
 
 .az-card {
-  display: inline-block;
+  display: inline-block;              /* 🔹 cambia inline-block por flex */
   vertical-align: top;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;  
   margin: 0 1rem 2rem 1rem;
+  border-radius: 12px;
   min-width: 180px;
   max-width: 200px;   
 }
@@ -223,9 +234,12 @@ button:hover,
 }
 
 .az-card h3 {
-  font-size: 1.8rem;
-  font-weight: 800;
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--az-gris-oscuro); 
+  text-align: center;
+  margin-top: 0.5rem;
+  word-wrap: break-word;
 }
 
 .az-card:hover {

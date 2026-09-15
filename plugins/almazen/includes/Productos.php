@@ -10,7 +10,7 @@ class Productos {
     public function __construct() {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->tabla = 'az_alm_productos';
+        $this->tabla = $this->wpdb->prefix . 'alm_productos';
     }
 
     public function obtenerTodos(): array {

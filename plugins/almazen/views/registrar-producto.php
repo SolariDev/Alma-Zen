@@ -1,7 +1,7 @@
 <?php
 
 global $wpdb;
-$tabla_productos = 'az_alm_productos';
+$tabla_productos = $wpdb->prefix . 'alm_productos';
 
 $producto_guardado = false;
 
@@ -9,6 +9,7 @@ $producto_guardado = false;
 if ( isset($_POST['guardar_producto']) ) {
 
     $nombre   = sanitize_text_field($_POST['nombre']);
+    $marca    = sanitize_text_field($_POST['marca']);
     $precio   = intval($_POST['precio']);
     $cantidad = floatval($_POST['cantidad']);
     $unidad   = sanitize_text_field($_POST['unidad']);
@@ -18,13 +19,14 @@ if ( isset($_POST['guardar_producto']) ) {
             $tabla_productos,
             [
                 'nombre'              => $nombre,
+                'marca'               => $marca,
                 'precio'              => $precio,
                 'cantidad'            => $cantidad,
                 'unidad'              => $unidad,
                 'empaque'             => $empaque,
                 'fecha_actualizacion' => current_time('mysql')
             ],
-            ['%s','%d', '%s','%s','%s','%s']
+            ['%s', '%s', '%d', '%s','%s','%s','%s']
         );
 
         if ($resultado === false) {
@@ -41,6 +43,9 @@ if ( isset($_POST['guardar_producto']) ) {
     <form method="post" class="az-form">
         <label for="nombre">Nombre del producto</label>
         <input type="text" id="nombre" name="nombre" required>
+
+        <label for="marca">Marca</label>
+        <input type="text" id="marca" name="marca">
 
         <label for="precio">Precio</label>
         <input type="number" id="precio" name="precio" step="1" min="0" required>
@@ -60,6 +65,7 @@ if ( isset($_POST['guardar_producto']) ) {
         <label for="empaque">Empaque / Presentación</label>
         <select id="empaque" name="empaque">
             <option value="">Sin empaque</option>
+            <option value="pack4">Pack de 4</option>
             <option value="pack6">Pack de 6</option>
             <option value="pack12">Pack de 12</option>
             <option value="bolsa">Bolsa</option>
@@ -70,10 +76,6 @@ if ( isset($_POST['guardar_producto']) ) {
         <div class="az-admin-tools">
             <button type="submit" name="guardar_producto" class="az-btn">Guardar producto</button>
         </div>
-
-        <?php if ($producto_guardado): ?>
-            <a href="<?php echo esc_url(home_url('/registrar-producto')); ?>" class="az-btn login">Registrar otro producto</a>
-        <?php endif; ?>
     </form>
 
     <div class="az-admin-tools">
