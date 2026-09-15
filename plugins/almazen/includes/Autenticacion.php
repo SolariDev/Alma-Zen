@@ -10,7 +10,7 @@ class Autenticacion {
     public function __construct() {
         global $wpdb;
         $this->wpdb = $wpdb;
-        // Nombre exacto de la tabla en tu BD (sin prefijo automático)
+        
         $this->tabla_usuarios = $this->wpdb->prefix . 'alm_usuarios';
 
         if (session_status() === PHP_SESSION_NONE) {

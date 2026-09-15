@@ -41,7 +41,7 @@ if ( isset($_POST['guardar_producto']) ) {
 <div class="az-panel az-admin">
     <h2>Registrar producto</h2>
     <form method="post" class="az-form">
-        <label for="nombre">Nombre del producto</label>
+        <label for="nombre">Nombre</label>
         <input type="text" id="nombre" name="nombre" required>
 
         <label for="marca">Marca</label>
@@ -74,11 +74,11 @@ if ( isset($_POST['guardar_producto']) ) {
         </select>
 
         <div class="az-admin-tools">
-            <button type="submit" name="guardar_producto" class="az-btn">Guardar producto</button>
+            <button type="submit" name="guardar_producto" class="az-btn">Guardar</button>
         </div>
     </form>
 
-    <div class="az-admin-tools">
-        <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn admin">Volver al panel</a>
+    <div class="az-botones" style="display:inline-block;">
+        <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn login">Volver al panel</a>
     </div>    
 </div>

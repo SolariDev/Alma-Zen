@@ -15,7 +15,7 @@ $mensaje = '';
 if (isset($_POST['guardar'])) {
     $id        = intval($_POST['id']);
     $nombre    = sanitize_text_field($_POST['nombre']);
-    $precio    = intval(str_replace('$','', $_POST['precio']));
+    $precio    = intval(str_replace('$ ','', $_POST['precio']));
     $cantidad  = floatval($_POST['cantidad']);
     $unidad    = sanitize_text_field($_POST['unidad']);
     $empaque   = sanitize_text_field($_POST['empaque']);
@@ -99,7 +99,7 @@ if (isset($_GET['q'])) {
         <input type="text" name="marca" value="<?php echo esc_attr($producto['marca'] ?? ''); ?>">
 
         <label>Precio</label>
-        <input type="text" name="precio" value="<?php echo "$" . esc_attr($producto['precio']); ?>" required>
+        <input type="text" name="precio" value="<?php echo "$ " . esc_attr($producto['precio']); ?>" required>
 
         <label>Cantidad</label>
         <input type="number" name="cantidad" step="0.01" value="<?php echo esc_attr($producto['cantidad']); ?>" required>

@@ -42,7 +42,7 @@ if (!$usuario) {
 
                 echo '<div class="az-card">';
                 echo '<h3>' . esc_html($prod['nombre']) . '</h3>';
-                echo '<p>Precio: $' . esc_html($prod['precio']) . '</p>';
+                echo '<p>Precio: $ ' . esc_html($prod['precio']) . '</p>';
                 echo '<p>Cantidad: ' . esc_html($prod['cantidad']) . '</p>';
                 echo '<p>Unidad: ' . esc_html($prod['unidad']) . '</p>';
                 echo '<p>Empaque: ' . esc_html($prod['empaque']) . '</p>';
