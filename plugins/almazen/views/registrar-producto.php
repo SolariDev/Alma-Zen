@@ -55,22 +55,25 @@ if ( isset($_POST['guardar_producto']) ) {
 
         <label for="unidad">Unidad de medida</label>
         <select id="unidad" name="unidad" required>
-            <option value="lt">Litro</option>
-            <option value="ml">Mililitros</option>
-            <option value="kg">Kilogramos</option>
-            <option value="gr">Gramos</option>
+            <option value="lt">Lt.</option>
+            <option value="ml">Mlls.</option>
+            <option value="kg">Kg.</option>
+            <option value="gr">Grs.</option>
             <option value="unidad">Unidad</option>
         </select>
 
         <label for="empaque">Empaque / Presentación</label>
         <select id="empaque" name="empaque">
             <option value="">Sin empaque</option>
+            <option value="pack">Pack</option>
             <option value="pack4">Pack de 4</option>
             <option value="pack6">Pack de 6</option>
             <option value="pack12">Pack de 12</option>
             <option value="bolsa">Bolsa</option>
-            <option value="tarrina">Tarrina</option>
             <option value="caja">Caja</option>
+            <option value="lata">Lata</option>
+            <option value="petaca">Petaca</option>
+            <option value="tarrina">Tarrina</option>
         </select>
 
         <div class="az-admin-tools">
