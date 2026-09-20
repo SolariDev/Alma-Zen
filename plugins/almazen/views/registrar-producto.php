@@ -1,9 +1,10 @@
 <?php
-
 global $wpdb;
 $tabla_productos = $wpdb->prefix . 'alm_productos';
 
 $producto_guardado = false;
+
+$mensaje = '';
 
 // Procesar formulario
 if ( isset($_POST['guardar_producto']) ) {
@@ -29,59 +30,63 @@ if ( isset($_POST['guardar_producto']) ) {
             ['%s', '%s', '%d', '%s','%s','%s','%s']
         );
 
-        if ($resultado === false) {
-            echo '<p class="az-mensaje">❌ Error al guardar: ' . esc_html($wpdb->last_error) . '</p>';
-        } else {
-            echo '<p class="az-mensaje">✅ Producto guardado correctamente.</p>';
-            $producto_guardado = true;
-        }
+        $mensaje = ($resultado === false)
+        ? '❌ Error al guardar: ' . esc_html($wpdb->last_error)
+        : '✅ Producto guardado correctamente.';
     }
 ?>
 
-<div class="az-panel az-admin">
-    <h2>Registrar producto</h2>
-    <form method="post" class="az-form">
-        <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" name="nombre" required>
+<div class="az-page az-auth">
+    <div class="az-container">
 
-        <label for="marca">Marca</label>
-        <input type="text" id="marca" name="marca">
+        <h2 class="az-title az-text-center az-mb-lg">Registrar producto</h2>
 
-        <label for="precio">Precio</label>
-        <input type="number" id="precio" name="precio" step="1" min="0" required>
+        <?php if ($mensaje) : ?>
+            <p class="az-mensaje"><?php echo $mensaje; ?></p>
+        <?php endif; ?>
 
-        <label for="cantidad">Cantidad</label>
-        <input type="number" id="cantidad" name="cantidad" step="0.01" required>
+        <form method="post" class="az-form">
+            <label for="nombre" class="az-label">Nombre</label>
+            <input type="text" id="nombre" name="nombre" class="az-input az-mb-md" required>
 
-        <label for="unidad">Unidad de medida</label>
-        <select id="unidad" name="unidad" required>
-            <option value="lt">Lt.</option>
-            <option value="ml">Mlls.</option>
-            <option value="kg">Kg.</option>
-            <option value="gr">Grs.</option>
-            <option value="unidad">Unidad</option>
-        </select>
+            <label for="marca" class="az-label">Marca</label>
+            <input type="text" id="marca" name="marca" class="az-input az-mb-md">
 
-        <label for="empaque">Empaque / Presentación</label>
-        <select id="empaque" name="empaque">
-            <option value="">Sin empaque</option>
-            <option value="pack">Pack</option>
-            <option value="pack4">Pack de 4</option>
-            <option value="pack6">Pack de 6</option>
-            <option value="pack12">Pack de 12</option>
-            <option value="bolsa">Bolsa</option>
-            <option value="caja">Caja</option>
-            <option value="lata">Lata</option>
-            <option value="petaca">Petaca</option>
-            <option value="tarrina">Tarrina</option>
-        </select>
+            <label for="precio" class="az-label">Precio</label>
+            <input type="number" id="precio" name="precio" step="1" min="0" class="az-input az-mb-md" required>
 
-        <div class="az-admin-tools">
-            <button type="submit" name="guardar_producto" class="az-btn">Guardar</button>
+            <label for="cantidad" class="az-label">Cantidad</label>
+            <input type="number" id="cantidad" name="cantidad" step="0.01" class="az-input az-mb-md" required>
+
+            <label for="unidad" class="az-label">Unidad de medida</label>
+            <select id="unidad" name="unidad" class="az-input az-mb-md" required>
+                <option value="lt">Lt.</option>
+                <option value="ml">Ml.</option>
+                <option value="kg">Kg.</option>
+                <option value="gr">Gr.</option>
+                <option value="unidad">Unidad</option>
+            </select>
+
+            <label for="empaque" class="az-label">Empaque / Presentación</label>
+            <select id="empaque" name="empaque" class="az-input az-mb-lg">
+                <option value="">Sin empaque</option>
+                <option value="pack">Pack</option>
+                <option value="pack4">Pack de 4</option>
+                <option value="pack6">Pack de 6</option>
+                <option value="pack12">Pack de 12</option>
+                <option value="bolsa">Bolsa</option>
+                <option value="caja">Caja</option>
+                <option value="lata">Lata</option>
+                <option value="petaca">Petaca</option>
+                <option value="tarrina">Tarrina</option>
+            </select>
+
+            <button type="submit" name="guardar_producto" class="az-btn az-btn-primary">Guardar</button>
+        </form>
+
+        <div class="az-botones">
+            <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn az-btn-secondary">Volver al panel</a>
         </div>
-    </form>
 
-    <div class="az-botones" style="display:inline-block;">
-        <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn login">Volver al panel</a>
-    </div>    
+    </div>
 </div>

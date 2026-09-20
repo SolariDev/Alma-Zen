@@ -7,15 +7,21 @@ if (!$usuario) {
     exit;
 }
 
+global $wpdb;
+$tabla = $wpdb->prefix . 'alm_productos';
 $productosModel = new Productos();
-$producto = null;
-$mensaje = '';
 
-// Procesar guardado
+$producto = null;
+$resultados = [];
+$mensaje = '';
+$accion_post = false;
+
+// Guardar cambios
 if (isset($_POST['guardar'])) {
+    $accion_post = true;
     $id        = intval($_POST['id']);
     $nombre    = sanitize_text_field($_POST['nombre']);
-    $precio    = intval(str_replace('$ ','', $_POST['precio']));
+    $precio    = intval(str_replace('$ ', '', $_POST['precio']));
     $cantidad  = floatval($_POST['cantidad']);
     $unidad    = sanitize_text_field($_POST['unidad']);
     $empaque   = sanitize_text_field($_POST['empaque']);
@@ -23,8 +29,6 @@ if (isset($_POST['guardar'])) {
     $proveedor = sanitize_text_field($_POST['proveedor']);
     $categoria = sanitize_text_field($_POST['categoria']);
 
-    global $wpdb;
-    $tabla = $wpdb->prefix . 'alm_productos';
     $wpdb->update(
         $tabla,
         [
@@ -39,109 +43,131 @@ if (isset($_POST['guardar'])) {
             'fecha_actualizacion' => current_time('mysql')
         ],
         ['id' => $id],
-        ['%s','%d','%s','%s','%s','%s','%s','%s','%s'],
+        ['%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s'],
         ['%d']
     );
 
-    $mensaje = '✅ Producto actualizado correctamente.';
+    $mensaje  = '✅ Producto actualizado correctamente.';
+    $producto = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tabla WHERE id = %d", $id), ARRAY_A);
 }
 
+// Eliminar
 if (isset($_POST['eliminar'])) {
+    $accion_post = true;
     $id = intval($_POST['id']);
-    global $wpdb;
-    $tabla = $wpdb->prefix . 'alm_productos';
     $wpdb->delete($tabla, ['id' => $id], ['%d']);
-    $mensaje = '🗑️ Producto eliminado correctamente.';
+    $mensaje  = '🗑️ Producto eliminado correctamente.';
     $producto = null;
 }
 
-// Si se envió búsqueda
-if (isset($_GET['q'])) {
-    $termino = sanitize_text_field($_GET['q']);
-    $resultados = $productosModel->buscarPorNombre($termino);
-// el primero en la coincidencia se asigna a $producto
-    if (!empty($resultados)) {
-        $producto = $resultados[0];
+// Solo miramos la URL (buscador o selección puntual) si esto NO vino de guardar/eliminar
+if (!$accion_post) {
+    if (isset($_GET['id'])) {
+        $id = intval($_GET['id']);
+        $producto = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tabla WHERE id = %d", $id), ARRAY_A);
+
+    } elseif (isset($_GET['q'])) {
+        $termino    = sanitize_text_field($_GET['q']);
+        $resultados = $productosModel->buscarPorNombre($termino);
+
+        if (count($resultados) === 1) {
+            $producto   = $resultados[0];
+            $resultados = [];
+        }
     }
 }
 ?>
 
-<div class="az-panel az-admin">
-    <h3 class="az-titulo-editar">Editar producto</h3>
-    
-    <!-- Mensaje de éxito -->
-    <?php if ($mensaje): ?>
-        <div class="az-mensaje-exito"><?php echo esc_html($mensaje); ?></div>
-    <?php endif; ?>
+<div class="az-page az-auth">
+    <div class="az-container">
 
-    <!-- Buscador -->
-    <form method="get" action="<?php echo esc_url(home_url('/editar-producto')); ?>" class="az-form-buscar">
-        <input type="text" name="q" placeholder="Buscar producto..." required>
-        <button type="submit" class="az-btn">
-            <img src="<?php echo ALMAZEN_URL . 'assets/img/buscar.png'; ?>" alt="Buscar" class="az-icon-buscar">
-        </button>
-    </form>
+        <h2 class="az-title az-text-center az-mb-lg">Editar producto</h2>
 
-    <div class="az-admin-tools">
-        <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn admin">Volver al panel</a>
-    </div>
+        <?php if ($mensaje) : ?>
+            <p class="az-mensaje"><?php echo esc_html($mensaje); ?></p>
+        <?php endif; ?>
 
-    <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="btn-volver-panel" title="Volver al panel"><span class="icon-arrow-left"></span></a>
+        <form method="get" action="<?php echo esc_url(home_url('/editar-producto')); ?>" class="az-form">
+            <div class="az-search">
+                <input type="search" name="q" class="az-input" placeholder="Buscar producto..."
+                    value="<?php echo isset($_GET['q']) ? esc_attr($_GET['q']) : ''; ?>" required>
+                <button type="submit" class="az-btn az-btn-primary az-btn-icon" aria-label="Buscar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        </form>
 
-    <?php if ($producto): ?>
-    <form method="post" class="az-form">
-        <input type="hidden" name="id" value="<?php echo esc_attr($producto['id']); ?>">
+        <?php if (!empty($resultados)) : ?>
+            <p class="az-subtitle az-text-center az-mb-md">Se encontraron varios productos, elegí el correcto:</p>
+            <div class="az-botones az-mb-lg">
+                <?php foreach ($resultados as $r) : ?>
+                    <a href="<?php echo esc_url(add_query_arg('id', $r['id'], home_url('/editar-producto'))); ?>" class="az-btn az-btn-secondary">
+                        <?php echo esc_html($r['nombre'] . ' — ' . $r['marca'] . ' — $' . $r['precio'] . ' — ' . $r['cantidad'] . ' ' . $r['unidad']); ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        <?php elseif (isset($_GET['q']) && !$producto) : ?>
+            <p class="az-mensaje">No se encontró ningún producto con ese nombre.</p>
+        <?php endif; ?>
 
-        <label>Nombre</label>
-        <input type="text" name="nombre" value="<?php echo esc_attr($producto['nombre']); ?>" required>
+        <?php if ($producto) : ?>
+            <form method="post" class="az-form">
+                <input type="hidden" name="id" value="<?php echo esc_attr($producto['id']); ?>">
 
-        <label>Marca</label>
-        <input type="text" name="marca" value="<?php echo esc_attr($producto['marca'] ?? ''); ?>">
+                <label for="nombre" class="az-label">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="az-input az-mb-md" value="<?php echo esc_attr($producto['nombre']); ?>" required>
 
-        <label>Precio</label>
-        <input type="text" name="precio" value="<?php echo "$ " . esc_attr($producto['precio']); ?>" required>
+                <label for="marca" class="az-label">Marca</label>
+                <input type="text" id="marca" name="marca" class="az-input az-mb-md" value="<?php echo esc_attr($producto['marca'] ?? ''); ?>">
 
-        <label>Cantidad</label>
-        <input type="number" name="cantidad" step="0.01" value="<?php echo esc_attr($producto['cantidad']); ?>" required>
+                <label for="precio" class="az-label">Precio</label>
+                <input type="text" id="precio" name="precio" class="az-input az-mb-md" value="<?php echo esc_attr($producto['precio']); ?>" required>
 
-        <label>Unidad</label>
-        <select name="unidad" required>
-            <option value="ml" <?php selected($producto['unidad'], 'ml'); ?>>Mililitros</option>
-            <option value="lt" <?php selected($producto['unidad'], 'lt'); ?>>Litros</option>
-            <option value="gr" <?php selected($producto['unidad'], 'gr'); ?>>Gramos</option>
-            <option value="kg" <?php selected($producto['unidad'], 'kg'); ?>>Kilogramos</option>
-            <option value="unidad" <?php selected($producto['unidad'], 'unidad'); ?>>Unidad</option>
-        </select>
+                <label for="cantidad" class="az-label">Cantidad</label>
+                <input type="number" id="cantidad" name="cantidad" step="0.01" class="az-input az-mb-md" value="<?php echo esc_attr($producto['cantidad']); ?>" required>
 
-        <label>Empaque / Presentación</label>
-        <select name="empaque">
-            <option value="" <?php selected($producto['empaque'], ''); ?>>Sin empaque</option>
-            <option value="pack4" <?php selected($producto['empaque'], 'pack4'); ?>>Pack de 4</option>
-            <option value="pack6" <?php selected($producto['empaque'], 'pack6'); ?>>Pack de 6</option>
-            <option value="pack12" <?php selected($producto['empaque'], 'pack12'); ?>>Pack de 12</option>
-            <option value="bolsa" <?php selected($producto['empaque'], 'bolsa'); ?>>Bolsa</option>
-            <option value="tarrina" <?php selected($producto['empaque'], 'tarrina'); ?>>Tarrina</option>
-            <option value="caja" <?php selected($producto['empaque'], 'caja'); ?>>Caja</option>
-        </select>
+                <label for="unidad" class="az-label">Unidad</label>
+                <select id="unidad" name="unidad" class="az-input az-mb-md" required>
+                    <option value="ml" <?php selected($producto['unidad'], 'ml'); ?>>Mililitros</option>
+                    <option value="lt" <?php selected($producto['unidad'], 'lt'); ?>>Litros</option>
+                    <option value="gr" <?php selected($producto['unidad'], 'gr'); ?>>Gramos</option>
+                    <option value="kg" <?php selected($producto['unidad'], 'kg'); ?>>Kilogramos</option>
+                    <option value="unidad" <?php selected($producto['unidad'], 'unidad'); ?>>Unidad</option>
+                </select>
 
-        <label>Proveedor</label>
-        <input type="text" name="proveedor" value="<?php echo esc_attr($producto['proveedor'] ?? ''); ?>">
+                <label for="empaque" class="az-label">Empaque / Presentación</label>
+                <select id="empaque" name="empaque" class="az-input az-mb-lg">
+                    <option value="" <?php selected($producto['empaque'], ''); ?>>Sin empaque</option>
+                    <option value="pack4" <?php selected($producto['empaque'], 'pack4'); ?>>Pack de 4</option>
+                    <option value="pack6" <?php selected($producto['empaque'], 'pack6'); ?>>Pack de 6</option>
+                    <option value="pack12" <?php selected($producto['empaque'], 'pack12'); ?>>Pack de 12</option>
+                    <option value="bolsa" <?php selected($producto['empaque'], 'bolsa'); ?>>Bolsa</option>
+                    <option value="tarrina" <?php selected($producto['empaque'], 'tarrina'); ?>>Tarrina</option>
+                    <option value="caja" <?php selected($producto['empaque'], 'caja'); ?>>Caja</option>
+                </select>
 
-        <label>Categoría</label>
-        <input type="text" name="categoria" value="<?php echo esc_attr($producto['categoria'] ?? ''); ?>">
+                <label for="proveedor" class="az-label">Proveedor</label>
+                <input type="text" id="proveedor" name="proveedor" class="az-input az-mb-md" value="<?php echo esc_attr($producto['proveedor'] ?? ''); ?>">
 
-        <div class="az-admin-tools">
-            <button type="submit" name="guardar" class="az-btn">Guardar cambios</button>
+                <label for="categoria" class="az-label">Categoría</label>
+                <input type="text" id="categoria" name="categoria" class="az-input az-mb-lg" value="<?php echo esc_attr($producto['categoria'] ?? ''); ?>">
 
-            <button type="submit" name="eliminar" class="az-btn eliminar"
-                   onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
-                Eliminar
-            </button>
+                <div class="az-botones">
+                    <button type="submit" name="guardar" class="az-btn az-btn-primary">Guardar cambios</button>
+                    <button type="submit" name="eliminar" class="az-btn az-btn-danger"
+                            onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
+                        Eliminar
+                    </button>
+                </div>
+            </form>
+        <?php endif; ?>
+
+        <div class="az-botones az-mb-lg">
+            <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn az-btn-secondary">Volver al panel</a>
         </div>
-    </form>
-</div>
-          
-    <?php elseif (isset($_GET['q'])): ?>
-        <p class="az-mensaje">No se encontró ningún producto con ese nombre.</p>
-    <?php endif; ?>
+
+    </div>
 </div>

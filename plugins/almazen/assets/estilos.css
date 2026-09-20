@@ -1,25 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* =======================================================
 1. VARIABLES
 ======================================================= */
-
 :root {
   /* Fondos */
-  --bg-main: #121212;
-  --bg-surface: #1b1b1b;
-  --bg-input: #242424;
+  --bg-main: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-input: #f4f4f5;
   /* Bordes */
-  --border-color: #303030;
+  --border-color: #e2e2e2;
   /* Texto */
-  --text-primary: #ffffff;
-  --text-secondary: #f3d4d4;
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
   /* Acciones */
   --primary: #3b82f6;
-  --success: #22c55e;
   --danger: #ef4444;
   /* Radios */
-  --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   /* Espaciados */
@@ -32,28 +29,12 @@
 }
 
 /* =======================================================
-1.1 TEMA CLARO (Inicio, Login, Registrar admin/usuario)
-======================================================= */
-.az-auth {
-  --bg-main: #ffffff;
-  --bg-surface: #ffffff;
-  --bg-input: #f4f4f5;
-  --border-color: #e2e2e2;
-  --text-primary: #1a1a1a;
-  --text-secondary: #6b7280;
-
-  background: var(--bg-main);
-  min-height: 100vh;
-}
-
-/* =======================================================
 2. RESET
 ======================================================= */
-/* Comportamiento de las vistas */
 * {
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* =======================================================
@@ -62,30 +43,26 @@
 html {
   font-size: 16px;
 }
-/* Tipografía global*/
-body{
-  background:var(--bg-main);
-  color:var(--text-primary);
-  font-family: 'Montserrat', 'Segoe UI', sans-serif;
-  line-height:1.5;
+body {
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  line-height: 1.5;
 }
 
 /* =======================================================
 4. LAYOUT
 ======================================================= */
-/* Estructuras compartidas */
 .az-page {
   width: 100%;
   min-height: 100vh;
+  background: var(--bg-main);
 }
 .az-container {
-width: 100%;
-max-width: 380px;
-margin: 0 auto;
-padding: var(--space-md);
-}
-.az-section {
-margin-bottom: var(--space-lg);
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  padding: var(--space-md);
 }
 
 /* =======================================================
@@ -94,6 +71,7 @@ margin-bottom: var(--space-lg);
 .az-title {
   font-size: 1.5rem;
   font-weight: 600;
+  color: var(--text-primary) !important;
 }
 .az-subtitle {
   color: var(--text-secondary);
@@ -118,19 +96,18 @@ margin-bottom: var(--space-lg);
   color: var(--text-secondary);
 }
 .az-input {
-width: 100%;
-padding: 12px;
-border: 1px solid var(--border-color);
-border-radius: var(--radius-md);
-background: var(--bg-input);
-color: var(--text-primary);
-font-family: inherit;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: inherit;
 }
 .az-input:focus {
-outline: none;
-border-color: var(--primary);
+  outline: none;
+  border-color: var(--primary);
 }
-
 .az-mensaje {
   text-align: center;
   margin-bottom: var(--space-md);
@@ -177,7 +154,11 @@ border-color: var(--primary);
   color: #ffffff !important;
   border: 1.5px solid var(--danger) !important;
 }
-
+.az-btn-sm {
+  width: auto !important;
+  display: inline-block !important;
+  padding: 8px 24px !important;
+}
 .az-link {
   display: block;
   width: 100%;
@@ -195,16 +176,16 @@ border-color: var(--primary);
 8. UTILIDADES
 ======================================================= */
 .az-text-center {
-text-align: center;
+  text-align: center;
 }
 .az-mb-sm {
-margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-sm);
 }
 .az-mb-md {
-margin-bottom: var(--space-md);
+  margin-bottom: var(--space-md);
 }
 .az-mb-lg {
-margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-lg);
 }
 
 /* =======================================================
@@ -223,4 +204,29 @@ margin-bottom: var(--space-lg);
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+}
+
+/* =======================================================
+10. BUSCADOR
+======================================================= */
+.az-search {
+  display: flex;
+  gap: var(--space-sm);
+}
+.az-search .az-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+.az-btn-icon {
+  width: 48px !important;
+  height: 48px;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.az-btn-icon svg {
+  width: 20px;
+  height: 20px;
 }
