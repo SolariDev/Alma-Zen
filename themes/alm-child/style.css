@@ -14,7 +14,9 @@ Text Domain: alm-child
 /* Importa estilos del padre */
 @import url("../hello-elementor/style.css");
 
-/* Ajustes globales iniciales */
+/* Ajustes globales: neutraliza el tema padre (Hello Elementor)
+   dentro de las plantillas del plugin Alma-Zen */
+header.site-header,
 .entry-title,
 .elementor-page-title,
 .elementor-heading-title {
@@ -23,4 +25,10 @@ Text Domain: alm-child
     padding: 0 !important;
     height: 0 !important;
     overflow: hidden !important;
+}
+
+.az-page img,
+.az-page p,
+.az-page button {
+    margin: 0 !important;
 }

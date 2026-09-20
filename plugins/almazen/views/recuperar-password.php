@@ -27,15 +27,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="az-form">
+<div class="az-page az-auth">
+    <div class="az-container">
 
-    <div class="az-logo">
-        <img src="<?php echo ALMAZEN_URL . 'assets/img/logo-almazen.png'; ?>" alt="Alma-Zen" />
+        <div class="az-logo">
+            <img src="<?php echo ALMAZEN_URL . 'assets/img/logo-az.png'; ?>" alt="Alma-Zen" />
+        </div>
+
+        <div class="az-form">
+            <h2 class="az-title az-text-center az-mb-lg">Recuperar contraseña</h2>
+            <form method="post" action="">
+                <input type="email" name="email" class="az-input az-mb-lg" placeholder="Tu email registrado" autocomplete="off" required>
+                <button type="submit" class="az-btn az-btn-primary az-mb-md">Continuar</button>
+            </form>
+        </div>
+
+        <a href="<?php echo esc_url(home_url('/inicio')); ?>" class="az-btn az-btn-secondary az-mb-md">Volver al inicio</a>
+
     </div>
-    <h2>Recuperar contraseña</h2>
-    <form method="post" action="">
-        <input type="email" name="email" placeholder="Tu email registrado" required>
-        <button type="submit" class="az-btn login">Continuar</button>
-    </form>
-    <a href="<?php echo esc_url(home_url('/inicio')); ?>" class="az-btn admin">Volver al inicio</a>
 </div>
