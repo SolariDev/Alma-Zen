@@ -62,6 +62,7 @@ if ( isset($_POST['guardar_producto']) ) {
             <select id="unidad" name="unidad" class="az-input az-mb-md" required>
                 <option value="lt">Lt.</option>
                 <option value="ml">Ml.</option>
+                <option value="cc">Cc.</option>
                 <option value="kg">Kg.</option>
                 <option value="gr">Gr.</option>
                 <option value="unidad">Unidad</option>

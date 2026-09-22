@@ -26,9 +26,7 @@ if (isset($_POST['guardar'])) {
     $unidad    = sanitize_text_field($_POST['unidad']);
     $empaque   = sanitize_text_field($_POST['empaque']);
     $marca     = sanitize_text_field($_POST['marca']);
-    $proveedor = sanitize_text_field($_POST['proveedor']);
-    $categoria = sanitize_text_field($_POST['categoria']);
-
+   
     $wpdb->update(
         $tabla,
         [
@@ -38,12 +36,10 @@ if (isset($_POST['guardar'])) {
             'unidad'              => $unidad,
             'empaque'             => $empaque,
             'marca'               => $marca,
-            'proveedor'           => $proveedor,
-            'categoria'           => $categoria,
             'fecha_actualizacion' => current_time('mysql')
         ],
         ['id' => $id],
-        ['%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s'],
+        ['%s', '%d', '%s', '%s', '%s', '%s', '%s'],
         ['%d']
     );
 
@@ -131,29 +127,28 @@ if (!$accion_post) {
 
                 <label for="unidad" class="az-label">Unidad</label>
                 <select id="unidad" name="unidad" class="az-input az-mb-md" required>
-                    <option value="ml" <?php selected($producto['unidad'], 'ml'); ?>>Mililitros</option>
-                    <option value="lt" <?php selected($producto['unidad'], 'lt'); ?>>Litros</option>
-                    <option value="gr" <?php selected($producto['unidad'], 'gr'); ?>>Gramos</option>
-                    <option value="kg" <?php selected($producto['unidad'], 'kg'); ?>>Kilogramos</option>
+                    <option value="lt" <?php selected($producto['unidad'], 'lt'); ?>>Lt.</option>
+                    <option value="ml" <?php selected($producto['unidad'], 'ml'); ?>>Ml.</option>
+                    <option value="cc" <?php selected($producto['unidad'], 'cc'); ?>>Cc.</option>
+                    <option value="kg" <?php selected($producto['unidad'], 'kg'); ?>>Kg.</option>                    
+                    <option value="gr" <?php selected($producto['unidad'], 'gr'); ?>>Gr.</option>                    
                     <option value="unidad" <?php selected($producto['unidad'], 'unidad'); ?>>Unidad</option>
                 </select>
 
                 <label for="empaque" class="az-label">Empaque / Presentación</label>
                 <select id="empaque" name="empaque" class="az-input az-mb-lg">
                     <option value="" <?php selected($producto['empaque'], ''); ?>>Sin empaque</option>
+                    <option value="pack" <?php selected($producto['empaque'], 'pack'); ?>>Pack</option>
                     <option value="pack4" <?php selected($producto['empaque'], 'pack4'); ?>>Pack de 4</option>
                     <option value="pack6" <?php selected($producto['empaque'], 'pack6'); ?>>Pack de 6</option>
                     <option value="pack12" <?php selected($producto['empaque'], 'pack12'); ?>>Pack de 12</option>
                     <option value="bolsa" <?php selected($producto['empaque'], 'bolsa'); ?>>Bolsa</option>
-                    <option value="tarrina" <?php selected($producto['empaque'], 'tarrina'); ?>>Tarrina</option>
                     <option value="caja" <?php selected($producto['empaque'], 'caja'); ?>>Caja</option>
+                    <option value="lata" <?php selected($producto['empaque'], 'lata'); ?>>Lata</option>
+                    <option value="petaca" <?php selected($producto['empaque'], 'petaca'); ?>>Petaca</option>
+                    <option value="tarrina" <?php selected($producto['empaque'], 'tarrina'); ?>>Tarrina</option>
+                    
                 </select>
-
-                <label for="proveedor" class="az-label">Proveedor</label>
-                <input type="text" id="proveedor" name="proveedor" class="az-input az-mb-md" value="<?php echo esc_attr($producto['proveedor'] ?? ''); ?>">
-
-                <label for="categoria" class="az-label">Categoría</label>
-                <input type="text" id="categoria" name="categoria" class="az-input az-mb-lg" value="<?php echo esc_attr($producto['categoria'] ?? ''); ?>">
 
                 <div class="az-botones">
                     <button type="submit" name="guardar" class="az-btn az-btn-primary">Guardar cambios</button>
