@@ -17,11 +17,24 @@ class Productos {
         return $this->wpdb->get_results("SELECT * FROM {$this->tabla} ORDER BY nombre ASC", ARRAY_A);
     }
 
-    public function buscarPorNombre(string  $nombre): array {
+    /**
+     * Buscar productos por coincidencia parcial, insensible a 
+     mayúsculas/minúsculas.
+     */
+    public function buscarPorNombre(string $nombre, int $limite = 30): array {
+        $termino = trim($nombre);
+
+        if ($termino === '') {
+            return [];
+        }
+
+        $like = '%' . $this->wpdb->esc_like($termino) . '%';
+
         return $this->wpdb->get_results(
             $this->wpdb->prepare(
-                "SELECT * FROM {$this->tabla} WHERE nombre = BINARY %s ORDER BY nombre ASC",
-                $nombre
+                "SELECT * FROM {$this->tabla} WHERE LOWER(nombre) LIKE LOWER(%s) ORDER BY nombre ASC LIMIT %d",
+                $like,
+                $limite
             ),
             ARRAY_A
         );
