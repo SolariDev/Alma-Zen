@@ -1,57 +1,78 @@
 /**
- * Interacción dinámica optimizada para Alma-Zen
- * - Búsqueda dinámica con debounce
- * - Filtros con AJAX
- * - Botón flotante "Volver al panel" al hacer scroll
+ * Interacción dinámica — Panel de usuario Alma-Zen
+ * Búsqueda en vivo con debounce sobre az_buscar_productos (ajax.php)
  */
 
 jQuery(document).ready(function ($) {
 
-    // 🔹 Función genérica para peticiones AJAX
-    function cargarVista(data) {
-        $.ajax({
-            url: az_ajax.url,
-            type: 'POST',
-            data: data,
-            success: function (response) {
-                $('#az-contenedor-productos').html(response);
-            },
-            error: function () {
-                $('#az-contenedor-productos').html('<p class="az-mensaje">Error al cargar datos.</p>');
-            }
-        });
+    const $input      = $('#az-busqueda');
+    const $resultados = $('#az-resultados-live');
+
+    if (!$input.length || !$resultados.length) {
+        return; // esta vista no tiene buscador en vivo
     }
 
-    // 🔹 Búsqueda dinámica con debounce
+    function escapar(texto) {
+        return $('<div>').text(texto ?? '').html();
+    }
+
+    function renderResultados(productos) {
+        if (!productos || productos.length === 0) {
+            $resultados.html('<p class="az-mensaje">No se encontraron productos.</p>').show();
+            return;
+        }
+
+        let html = '<div class="az-botones">';
+        productos.forEach(function (p) {
+            const marca = p.marca ? ' — ' + escapar(p.marca) : '';
+            html += '<a href="' + az_ajax.panel_url + '?id=' + encodeURIComponent(p.id) + '" class="az-btn az-btn-secondary">' +
+                        escapar(p.nombre) + marca + ' — $' + escapar(p.precio) +
+                        ' — ' + escapar(p.cantidad) + ' ' + escapar(p.unidad) +
+                    '</a>';
+        });
+        html += '</div>';
+        $resultados.html(html).show();
+    }
+
     let debounceTimer;
-    $('#az-busqueda').on('keyup', function () {
+    $input.on('keyup', function () {
         clearTimeout(debounceTimer);
         const termino = $(this).val().trim();
 
-        if (termino.length === 0) {
-            $('#az-contenedor-productos').html('');
+        if (termino.length < 2) {
+            $resultados.hide().empty();
             return;
         }
 
         debounceTimer = setTimeout(function () {
-            cargarVista({
-                action: 'az_buscar_productos',
-                termino: termino
+            $.ajax({
+                url: az_ajax.url,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'az_buscar_productos',
+                    termino: termino,
+                    nonce: az_ajax.nonce
+                },
+                success: function (response) {
+                    if (response && response.success) {
+                        renderResultados(response.data);
+                    } else {
+                        $resultados.html('<p class="az-mensaje">Error al buscar.</p>').show();
+                    }
+                },
+                error: function () {
+                    $resultados.html('<p class="az-mensaje">Error al buscar.</p>').show();
+                }
             });
-        }, 300); // espera 300ms antes de disparar la búsqueda
+        }, 300);
     });
 
-    // 🔹 Botón flotante "Volver al panel"
-    const $btnFlotante = $('.btn-volver-panel'); // usar jQuery para asegurar compatibilidad
-
-    if ($btnFlotante.length) {
-        $(window).on('scroll', function () {
-            if ($(this).scrollTop() > 100) {
-                $btnFlotante.css('display', 'flex'); // aparece flotante
-            } else {
-                $btnFlotante.css('display', 'none'); // se oculta
-            }
-        });
-    }
+    // Cierra el listado al tocar/clickear fuera del buscador
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('.az-search, #az-resultados-live').length) {
+            $resultados.hide();
+        }
+    });
 
 });

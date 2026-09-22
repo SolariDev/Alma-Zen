@@ -52,22 +52,7 @@ if ( isset($_POST['guardar_producto']) ) {
             <label for="marca" class="az-label">Marca</label>
             <input type="text" id="marca" name="marca" class="az-input az-mb-md">
 
-            <label for="precio" class="az-label">Precio</label>
-            <input type="number" id="precio" name="precio" step="1" min="0" class="az-input az-mb-md" required>
-
-            <label for="cantidad" class="az-label">Cantidad</label>
-            <input type="number" id="cantidad" name="cantidad" step="0.01" class="az-input az-mb-md" required>
-
-            <label for="unidad" class="az-label">Unidad de medida</label>
-            <select id="unidad" name="unidad" class="az-input az-mb-md" required>
-                <option value="lt">Lt.</option>
-                <option value="ml">Ml.</option>
-                <option value="kg">Kg.</option>
-                <option value="gr">Gr.</option>
-                <option value="unidad">Unidad</option>
-            </select>
-
-            <label for="empaque" class="az-label">Empaque / Presentación</label>
+            <label for="empaque" class="az-label">Presentación / Empaque</label>
             <select id="empaque" name="empaque" class="az-input az-mb-lg">
                 <option value="">Sin empaque</option>
                 <option value="pack">Pack</option>
@@ -80,6 +65,22 @@ if ( isset($_POST['guardar_producto']) ) {
                 <option value="petaca">Petaca</option>
                 <option value="tarrina">Tarrina</option>
             </select>
+            
+            <label for="cantidad" class="az-label">Cantidad</label>
+            <input type="number" id="cantidad" name="cantidad" step="0.01" class="az-input az-mb-md" required>
+
+            <label for="unidad" class="az-label">Unidad de medida</label>
+            <select id="unidad" name="unidad" class="az-input az-mb-md" required>
+                <option value="lt">Lt.</option>
+                <option value="ml">Ml.</option>
+                <option value="cc">Cc.</option>
+                <option value="kg">Kg.</option>
+                <option value="gr">Gr.</option>
+                <option value="unidad">Unidad</option>
+            </select>
+
+            <label for="precio" class="az-label">Precio</label>
+            <input type="number" id="precio" name="precio" step="1" min="0" class="az-input az-mb-md" required>
 
             <button type="submit" name="guardar_producto" class="az-btn az-btn-primary">Guardar</button>
         </form>
