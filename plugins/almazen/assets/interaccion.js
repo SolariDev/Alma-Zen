@@ -17,22 +17,24 @@ jQuery(document).ready(function ($) {
     }
 
     function renderResultados(productos) {
-        if (!productos || productos.length === 0) {
-            $resultados.html('<p class="az-mensaje">No se encontraron productos.</p>').show();
-            return;
-        }
-
-        let html = '<div class="az-botones">';
-        productos.forEach(function (p) {
-            const marca = p.marca ? ' — ' + escapar(p.marca) : '';
-            html += '<a href="' + az_ajax.panel_url + '?id=' + encodeURIComponent(p.id) + '" class="az-btn az-btn-secondary">' +
-                        escapar(p.nombre) + marca + ' — $' + escapar(p.precio) +
-                        ' — ' + escapar(p.cantidad) + ' ' + escapar(p.unidad) +
-                    '</a>';
-        });
-        html += '</div>';
-        $resultados.html(html).show();
+    if (!productos || productos.length === 0) {
+        $resultados.html('<p class="az-mensaje">No se encontraron productos.</p>').show();
+        return;
     }
+
+    const urlBase = window.location.origin + window.location.pathname;
+
+    let html = '<div class="az-botones">';
+    productos.forEach(function (p) {
+        const marca = p.marca ? ' — ' + escapar(p.marca) : '';
+        html += '<a href="' + urlBase + '?id=' + encodeURIComponent(p.id) + '" class="az-btn az-btn-secondary">' +
+                    escapar(p.nombre) + marca + ' — $' + escapar(p.precio) +
+                    ' — ' + escapar(p.cantidad) + ' ' + escapar(p.unidad) +
+                '</a>';
+    });
+    html += '</div>';
+    $resultados.html(html).show();
+}
 
     let debounceTimer;
     $input.on('keyup', function () {

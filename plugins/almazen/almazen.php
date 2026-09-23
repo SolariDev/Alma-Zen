@@ -36,12 +36,12 @@ register_activation_hook(__FILE__, function () {
 // Cargar estilos y scripts
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('az-estilos', ALMAZEN_URL . 'assets/estilos.css');
-    wp_enqueue_script('az-interaccion', ALMAZEN_URL . 'assets/interaccion.js', array('jquery'), null, true);
+    $js_path = ALMAZEN_PATH . 'assets/interaccion.js';
+    wp_enqueue_script('az-interaccion', ALMAZEN_URL . 'assets/interaccion.js', array('jquery'), file_exists($js_path) ? filemtime($js_path) : null, true);
 
     wp_localize_script('az-interaccion', 'az_ajax', [
         'url'       => admin_url('admin-ajax.php'),
         'nonce'     => wp_create_nonce('az_buscar_productos_nonce'),
-        'panel_url' => home_url('/panel-usuario'),
     ]);
 });
 

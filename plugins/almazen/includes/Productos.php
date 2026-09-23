@@ -18,9 +18,8 @@ class Productos {
     }
 
     /**
-     * Buscar productos por coincidencia parcial, insensible a 
-     mayúsculas/minúsculas.
-     */
+     * Buscar productos por coincidencia parcial, insensible a mayúsculas minúsculas.
+     **/
     public function buscarPorNombre(string $nombre, int $limite = 30): array {
         $termino = trim($nombre);
 
@@ -32,8 +31,12 @@ class Productos {
 
         return $this->wpdb->get_results(
             $this->wpdb->prepare(
-                "SELECT * FROM {$this->tabla} WHERE LOWER(nombre) LIKE LOWER(%s) ORDER BY nombre ASC LIMIT %d",
-                $like,
+                "SELECT * FROM {$this->tabla} WHERE LOWER(nombre) LIKE LOWER(%s)
+                  OR LOWER(marca) LIKE LOWER(%s)
+                  OR LOWER(empaque) LIKE LOWER(%s)
+                  OR LOWER(unidad) LIKE LOWER(%s)
+                ORDER BY nombre ASC LIMIT %d",
+                $like, $like, $like, $like,
                 $limite
             ),
             ARRAY_A
