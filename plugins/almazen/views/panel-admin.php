@@ -15,23 +15,15 @@ if (isset($_POST['logout'])) {
 }
 
 $productosModel = new Productos();
+$pendientes = $productosModel->contarPendientes();
 $producto = null;
 $resultados = [];
 
-/*
- * Buscar producto
- *
- * Si viene ?id=xxx:
- * mostramos directamente ese producto.
- *
- * Si viene ?q=xxx:
- * buscamos todas las coincidencias.
- *
- * Si hay una sola coincidencia:
- * la mostramos directamente.
- *
- * Si hay varias:
- * mostramos las opciones para que el usuario elija.
+/* Buscar producto
+ * Si viene ?id=xxx: mostramos directamente ese producto.
+ * Si viene ?q=xxx: buscamos todas las coincidencias.
+ * Si hay una sola coincidencia: la mostramos directamente.
+ * Si hay varias: mostramos las opciones para que el usuario elija.
  */
 
 if (isset($_GET['id'])) {
@@ -72,6 +64,10 @@ if (isset($_GET['id'])) {
                class="az-btn az-btn-secondary">Registrar producto</a>
             <a href="<?php echo esc_url(home_url('/editar-producto')); ?>"
                class="az-btn az-btn-secondary">Editar producto</a>
+            <a href="<?php echo esc_url(home_url('/revisar-cambios')); ?>"
+               class="az-btn az-btn-secondary">
+                Cambios pendientes<?php echo $pendientes > 0 ? ' (' . (int) $pendientes . ')' : ''; ?>
+            </a>
         </div>
 
         <!-- Buscador de productos -->

@@ -7,6 +7,9 @@ if (!$usuario) {
     exit;
 }
 
+$es_admin  = ($usuario['rol'] ?? '') === 'admin';
+$url_panel = home_url($es_admin ? '/panel-admin' : '/panel-usuario');
+
 global $wpdb;
 $tabla = $wpdb->prefix . 'alm_productos';
 $productosModel = new Productos();
@@ -19,36 +22,43 @@ $accion_post = false;
 // Guardar cambios
 if (isset($_POST['guardar'])) {
     $accion_post = true;
-    $id        = intval($_POST['id']);
-    $nombre    = sanitize_text_field($_POST['nombre']);
-    $precio    = intval(str_replace('$ ', '', $_POST['precio']));
-    $cantidad  = floatval($_POST['cantidad']);
-    $unidad    = sanitize_text_field($_POST['unidad']);
-    $empaque   = sanitize_text_field($_POST['empaque']);
-    $marca     = sanitize_text_field($_POST['marca']);
-   
-    $wpdb->update(
-        $tabla,
-        [
-            'nombre'              => $nombre,
-            'precio'              => $precio,
-            'cantidad'            => $cantidad,
-            'unidad'              => $unidad,
-            'empaque'             => $empaque,
-            'marca'               => $marca,
-            'fecha_actualizacion' => current_time('mysql')
-        ],
-        ['id' => $id],
-        ['%s', '%d', '%s', '%s', '%s', '%s', '%s'],
-        ['%d']
-    );
+    $id    = intval($_POST['id']);
+    $datos = [
+        'nombre'   => sanitize_text_field($_POST['nombre']),
+        'precio'   => intval(str_replace('$ ', '', $_POST['precio'])),
+        'cantidad' => floatval($_POST['cantidad']),
+        'unidad'   => sanitize_text_field($_POST['unidad']),
+        'empaque'  => sanitize_text_field($_POST['empaque']),
+        'marca'    => sanitize_text_field($_POST['marca']),
+    ];
 
-    $mensaje  = '✅ Producto actualizado correctamente.';
+    if ($es_admin) {
+        // El admin edita directo
+        $wpdb->update(
+            $tabla,
+            $datos + ['fecha_actualizacion' => current_time('mysql')],
+            ['id' => $id],
+            ['%s', '%d', '%s', '%s', '%s', '%s', '%s'],
+            ['%d']
+        );
+        $mensaje = '✅ Producto actualizado correctamente.';
+    } else {
+        // El usuario común solo genera una solicitud pendiente
+        $res = $productosModel->solicitarCambio($id, $datos, (int) $usuario['id']);
+        $mensajes = [
+            'ok'           => '📨 Tu cambio quedó pendiente de aprobación del administrador.',
+            'sin_cambios'  => 'No hay cambios para enviar.',
+            'ya_pendiente' => 'Este producto ya tiene un cambio pendiente de aprobación.',
+            'error'        => '❌ No se pudo enviar el cambio.',
+        ];
+        $mensaje = $mensajes[$res] ?? $mensajes['error'];
+    }
+
     $producto = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tabla WHERE id = %d", $id), ARRAY_A);
 }
 
-// Eliminar
-if (isset($_POST['eliminar'])) {
+// Eliminar (solo admin)
+if (isset($_POST['eliminar']) && $es_admin) {
     $accion_post = true;
     $id = intval($_POST['id']);
     $wpdb->delete($tabla, ['id' => $id], ['%d']);
@@ -113,6 +123,12 @@ if (!$accion_post) {
             <form method="post" class="az-form">
                 <input type="hidden" name="id" value="<?php echo esc_attr($producto['id']); ?>">
 
+                <?php if (!$es_admin) : ?>
+                    <p class="az-subtitle az-text-center az-mb-md">
+                        Los cambios que envíes quedarán pendientes hasta que los apruebe el administrador.
+                    </p>
+                <?php endif; ?>
+
                 <label for="nombre" class="az-label">Nombre</label>
                 <input type="text" id="nombre" name="nombre" class="az-input az-mb-md" value="<?php echo esc_attr($producto['nombre']); ?>" required>
 
@@ -125,14 +141,14 @@ if (!$accion_post) {
                     <option value="pack" <?php selected($producto['empaque'], 'pack'); ?>>Pack</option>
                     <option value="pack4" <?php selected($producto['empaque'], 'pack4'); ?>>Pack de 4</option>
                     <option value="pack6" <?php selected($producto['empaque'], 'pack6'); ?>>Pack de 6</option>
-                    <option value="pack12" <?php selected($producto['empaque'], 'pack12'); ?>>Pack de 12</option>                    
+                    <option value="pack12" <?php selected($producto['empaque'], 'pack12'); ?>>Pack de 12</option>
                     <option value="bolsa" <?php selected($producto['empaque'], 'bolsa'); ?>>Bolsa</option>
                     <option value="caja" <?php selected($producto['empaque'], 'caja'); ?>>Caja</option>
                     <option value="lata" <?php selected($producto['empaque'], 'lata'); ?>>Lata</option>
                     <option value="petaca" <?php selected($producto['empaque'], 'petaca'); ?>>Petaca</option>
                     <option value="tarrina" <?php selected($producto['empaque'], 'tarrina'); ?>>Tarrina</option>
                 </select>
-                
+
                 <label for="cantidad" class="az-label">Cantidad</label>
                 <input type="number" id="cantidad" name="cantidad" step="0.01" class="az-input az-mb-md" value="<?php echo esc_attr($producto['cantidad']); ?>" required>
 
@@ -142,7 +158,7 @@ if (!$accion_post) {
                     <option value="ml" <?php selected($producto['unidad'], 'ml'); ?>>Ml.</option>
                     <option value="cc" <?php selected($producto['unidad'], 'cc'); ?>>Cc.</option>
                     <option value="kg" <?php selected($producto['unidad'], 'kg'); ?>>Kg.</option>
-                    <option value="gr" <?php selected($producto['unidad'], 'gr'); ?>>Gr.</option>                    
+                    <option value="gr" <?php selected($producto['unidad'], 'gr'); ?>>Gr.</option>
                     <option value="unidad" <?php selected($producto['unidad'], 'unidad'); ?>>Unidad</option>
                 </select>
 
@@ -150,17 +166,22 @@ if (!$accion_post) {
                 <input type="text" id="precio" name="precio" class="az-input az-mb-md" value="<?php echo esc_attr($producto['precio']); ?>" required>
 
                 <div class="az-botones">
-                    <button type="submit" name="guardar" class="az-btn az-btn-primary">Guardar cambios</button>
-                    <button type="submit" name="eliminar" class="az-btn az-btn-danger"
-                            onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
-                        Eliminar
+                    <button type="submit" name="guardar" class="az-btn az-btn-primary">
+                        <?php echo $es_admin ? 'Guardar cambios' : 'Enviar para aprobación'; ?>
                     </button>
+
+                    <?php if ($es_admin) : ?>
+                        <button type="submit" name="eliminar" class="az-btn az-btn-danger"
+                                onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
+                            Eliminar
+                        </button>
+                    <?php endif; ?>
                 </div>
             </form>
         <?php endif; ?>
 
         <div class="az-botones az-mb-lg">
-            <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn az-btn-secondary">Volver al panel</a>
+            <a href="<?php echo esc_url($url_panel); ?>" class="az-btn az-btn-secondary">Volver al panel</a>
         </div>
 
     </div>

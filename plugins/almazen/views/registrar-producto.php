@@ -1,4 +1,15 @@
 <?php
+$auth = new Autenticacion();
+$usuario = $auth->usuarioActual();
+
+if (!$usuario) {
+    wp_redirect(home_url('/inicio'));
+    exit;
+}
+
+$es_admin  = ($usuario['rol'] ?? '') === 'admin';
+$url_panel = home_url($es_admin ? '/panel-admin' : '/panel-usuario');
+
 global $wpdb;
 $tabla_productos = $wpdb->prefix . 'alm_productos';
 
@@ -86,7 +97,7 @@ if ( isset($_POST['guardar_producto']) ) {
         </form>
 
         <div class="az-botones">
-            <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn az-btn-secondary">Volver al panel</a>
+            <a href="<?php echo esc_url($url_panel); ?>" class="az-btn az-btn-secondary">Volver al panel</a>
         </div>
 
     </div>

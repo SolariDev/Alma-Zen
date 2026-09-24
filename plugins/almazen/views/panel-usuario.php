@@ -56,6 +56,14 @@ if (isset($_GET['id'])) {
             Panel de: <?php echo esc_html($usuario['nombre']); ?>
         </h2>
 
+        <!-- Acciones de productos -->
+        <div class="az-botones az-mb-lg">
+            <a href="<?php echo esc_url(home_url('/registrar-producto')); ?>"
+               class="az-btn az-btn-secondary">Registrar producto</a>
+            <a href="<?php echo esc_url(home_url('/editar-producto')); ?>"
+               class="az-btn az-btn-secondary">Editar producto</a>
+        </div>
+
         <!-- Buscador de productos -->
         <form method="get" action="<?php echo esc_url(home_url('/panel-usuario')); ?>" class="az-form">
             <div class="az-search">

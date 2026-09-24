@@ -100,3 +100,9 @@ add_shortcode('az_editar_producto', function () {
     include ALMAZEN_PATH . 'views/editar-producto.php';
     return ob_get_clean();
 });
+
+add_shortcode('az_revisar_cambios', function () {
+    ob_start();
+    include ALMAZEN_PATH . 'views/revisar-cambios.php';
+    return ob_get_clean();
+});
