@@ -59,12 +59,6 @@ add_shortcode('az_registrar_usuario', function () {
     return ob_get_clean();
 });
 
-add_shortcode('az_registrar_admin', function () {
-    ob_start();
-    include ALMAZEN_PATH . 'views/registrar-admin.php';
-    return ob_get_clean();
-});
-
 add_shortcode('az_login', function () {
     ob_start();
     include ALMAZEN_PATH . 'views/login.php';
@@ -104,5 +98,17 @@ add_shortcode('az_editar_producto', function () {
 add_shortcode('az_revisar_cambios', function () {
     ob_start();
     include ALMAZEN_PATH . 'views/revisar-cambios.php';
+    return ob_get_clean();
+});
+
+add_shortcode('az_usuarios', function () {
+    ob_start();
+    include ALMAZEN_PATH . 'views/usuarios.php';
+    return ob_get_clean();
+});
+
+add_shortcode('az_editar_usuario', function () {
+    ob_start();
+    include ALMAZEN_PATH . 'views/editar-usuario.php';
     return ob_get_clean();
 });

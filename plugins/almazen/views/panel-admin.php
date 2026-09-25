@@ -68,6 +68,8 @@ if (isset($_GET['id'])) {
                class="az-btn az-btn-secondary">
                 Cambios pendientes<?php echo $pendientes > 0 ? ' (' . (int) $pendientes . ')' : ''; ?>
             </a>
+             <a href="<?php echo esc_url(home_url('/usuarios')); ?>"
+               class="az-btn az-btn-secondary">Usuarios</a>
         </div>
 
         <!-- Buscador de productos -->

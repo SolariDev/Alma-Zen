@@ -150,4 +150,110 @@ class Autenticacion {
         );
         return (bool) $actualizado;
     }
+
+    /* ------------------------------------------------------------------
+     * Gestión de usuarios (panel del administrador)
+     * ------------------------------------------------------------------ */
+
+    /**
+     * Lista de usuarios para el panel del admin. No trae la contraseña.
+     */
+    public function listarUsuarios(): array {
+        return $this->wpdb->get_results(
+            "SELECT id, nombre, email, rol FROM {$this->tabla_usuarios} ORDER BY nombre ASC",
+            ARRAY_A
+        );
+    }
+
+    /**
+     * Datos de un usuario puntual, sin la contraseña.
+     */
+    public function obtenerUsuario(int $id): ?array {
+        $fila = $this->wpdb->get_row(
+            $this->wpdb->prepare(
+                "SELECT id, nombre, email, rol FROM {$this->tabla_usuarios} WHERE id = %d",
+                $id
+            ),
+            ARRAY_A
+        );
+        return $fila ?: null;
+    }
+
+    public function contarAdmins(): int {
+        return (int) $this->wpdb->get_var(
+            "SELECT COUNT(*) FROM {$this->tabla_usuarios} WHERE rol = 'admin'"
+        );
+    }
+
+    /**
+     * El admin actualiza el email y, opcionalmente, la contraseña de un usuario.
+     * Dejar $nuevaPassword vacío mantiene la contraseña actual.
+     */
+    public function actualizarUsuario(int $id, string $nuevoEmail, string $nuevaPassword = ''): string {
+        $nuevoEmail = sanitize_email($nuevoEmail);
+
+        if (!is_email($nuevoEmail)) {
+            return "El email no es válido.";
+        }
+
+        $existe = (int) $this->wpdb->get_var(
+            $this->wpdb->prepare(
+                "SELECT COUNT(*) FROM {$this->tabla_usuarios} WHERE email = %s AND id != %d",
+                $nuevoEmail,
+                $id
+            )
+        );
+        if ($existe > 0) {
+            return "Ese email ya lo usa otro usuario.";
+        }
+
+        $datos   = ['email' => $nuevoEmail];
+        $formato = ['%s'];
+
+        if ($nuevaPassword !== '') {
+            if (strlen($nuevaPassword) < 8) {
+                return "La contraseña debe tener al menos 8 caracteres.";
+            }
+            $datos['password'] = wp_hash_password($nuevaPassword);
+            $formato[] = '%s';
+        }
+
+        $actualizado = $this->wpdb->update(
+            $this->tabla_usuarios,
+            $datos,
+            ['id' => $id],
+            $formato,
+            ['%d']
+        );
+
+        if ($actualizado === false) {
+            error_log('Alma-Zen actualizarUsuario() error: ' . $this->wpdb->last_error);
+            return "Hubo un error al actualizar el usuario.";
+        }
+
+        return "Usuario actualizado correctamente.";
+    }
+
+    /**
+     * Elimina un usuario, cuidando no dejar el sistema sin ningún administrador
+     * y que nadie se elimine a sí mismo.
+     */
+    public function eliminarUsuario(int $id, int $solicitado_por): string {
+        if ($id === $solicitado_por) {
+            return "No podés eliminar tu propia cuenta.";
+        }
+
+        $usuario = $this->obtenerUsuario($id);
+        if (!$usuario) {
+            return "El usuario no existe.";
+        }
+
+        if ($usuario['rol'] === 'admin' && $this->contarAdmins() <= 1) {
+            return "No se puede eliminar al único administrador.";
+        }
+
+        $eliminado = $this->wpdb->delete($this->tabla_usuarios, ['id' => $id], ['%d']);
+
+        return $eliminado ? "Usuario eliminado correctamente." : "No se pudo eliminar el usuario.";
+    }
 }
