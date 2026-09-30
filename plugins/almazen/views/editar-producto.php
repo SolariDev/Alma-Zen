@@ -133,7 +133,7 @@ if (isset($_POST['guardar'])) {
 
         <form method="get" action="<?php echo esc_url(home_url('/editar-producto')); ?>" class="az-form">
             <div class="az-search">
-                <input type="search" name="q" class="az-input" placeholder="Buscar producto..."
+                <input type="search" name="q" id="az-busqueda" class="az-input" placeholder="Buscar producto..."
                     value="<?php echo isset($_GET['q']) ? esc_attr($_GET['q']) : ''; ?>" required>
                 <button type="submit" class="az-btn az-btn-primary az-btn-icon" aria-label="Buscar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -141,6 +141,10 @@ if (isset($_POST['guardar'])) {
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </button>
+            </div>
+            <div id="az-resultados-live"
+                 class="az-resultados-live"
+                 style="display:none;">
             </div>
         </form>
 

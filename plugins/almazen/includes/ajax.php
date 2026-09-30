@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Usado por el buscador en vivo del panel de usuario y admin
  */
 add_action('wp_ajax_az_buscar_productos', 'az_buscar_productos');
+add_action('wp_ajax_nopriv_az_buscar_productos', 'az_buscar_productos');
 
 function az_buscar_productos() {
     check_ajax_referer('az_buscar_productos_nonce', 'nonce');
