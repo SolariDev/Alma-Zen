@@ -1,27 +1,36 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $auth = new Autenticacion();
-    $mensaje = $auth->login(
-        $_POST['az_login_email'] ?? '',
-        $_POST['az_login_password'] ?? ''
-    );
-    echo '<p class="az-mensaje">' . esc_html($mensaje) . '</p>';
+    if (!wp_verify_nonce($_POST['az_nonce'] ?? '', 'az_login')) {
+        $mensaje = '⚠️ Inactividad prolongada. Probá de nuevo.';
+        echo '<p class="az-mensaje">' . esc_html($mensaje) . '</p>';
+    } else {
+        $auth = new Autenticacion();
+        $mensaje = $auth->login(
+            $_POST['az_login_email'] ?? '',
+            $_POST['az_login_password'] ?? ''
+        );
+        echo '<p class="az-mensaje">' . esc_html($mensaje) . '</p>';
 
-    if ($mensaje === "Login correcto.") {
+        if ($mensaje === "Login correcto.") {
 
-        $rol = $auth->rolActual();
+            $rol = $auth->rolActual();
 
-         if ($rol === 'admin') {
-            $redirect = esc_url(home_url('/panel-admin'));
-        } else {
-            $redirect = esc_url(home_url('/panel-usuario'));
+             if ($rol === 'admin') {
+                $redirect = esc_url(home_url('/panel-admin'));
+            } else {
+                $redirect = esc_url(home_url('/panel-usuario'));
+            }
+            
+            echo "<script>
+                    setTimeout(() => {
+                        window.location.href='" . $redirect . "';
+                    }, 1000);
+                  </script>";
         }
-        
-        echo "<script>
-                setTimeout(() => {
-                    window.location.href='" . $redirect . "';
-                }, 1000);
-              </script>";
     }
 }
 ?>
@@ -36,11 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="az-form">
             <h2 class="az-title az-text-center az-mb-lg">Iniciar sesión</h2>
             <form method="post" action="">
+                <?php wp_nonce_field('az_login', 'az_nonce'); ?>
                 <input type="email" name="az_login_email" class="az-input az-mb-md" placeholder="Email" autocomplete="off" required>
-                <input type="password" name="az_login_password" class="az-input az-mb-lg" placeholder="Contraseña" autocomplete="new-password" required>
+                <input type="password" name="az_login_password" class="az-input az-mb-lg" placeholder="Contraseña" autocomplete="off" required>
                 <button type="submit" class="az-btn az-btn-primary az-mb-md">Entrar</button>
-            </form>
-            <a href="<?php echo esc_url(home_url('/recuperar-password')); ?>" class="az-link">¿Olvidaste tu contraseña?</a>
+            </form>            
         </div>
 
         <a href="<?php echo esc_url(home_url('/inicio')); ?>" class="az-btn az-btn-secondary az-mb-md">Volver al inicio</a>

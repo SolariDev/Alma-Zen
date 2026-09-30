@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Alma-Zen
  * Description: Sistema de inventario con roles de administrador y usuario.
@@ -36,12 +35,12 @@ register_activation_hook(__FILE__, function () {
 // Cargar estilos y scripts
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('az-estilos', ALMAZEN_URL . 'assets/estilos.css');
-    wp_enqueue_script('az-interaccion', ALMAZEN_URL . 'assets/interaccion.js', array('jquery'), null, true);
+    $js_path = ALMAZEN_PATH . 'assets/interaccion.js';
+    wp_enqueue_script('az-interaccion', ALMAZEN_URL . 'assets/interaccion.js', array('jquery'), file_exists($js_path) ? filemtime($js_path) : null, true);
 
     wp_localize_script('az-interaccion', 'az_ajax', [
         'url'       => admin_url('admin-ajax.php'),
         'nonce'     => wp_create_nonce('az_buscar_productos_nonce'),
-        'panel_url' => home_url('/panel-usuario'),
     ]);
 });
 
@@ -59,21 +58,9 @@ add_shortcode('az_registrar_usuario', function () {
     return ob_get_clean();
 });
 
-add_shortcode('az_registrar_admin', function () {
-    ob_start();
-    include ALMAZEN_PATH . 'views/registrar-admin.php';
-    return ob_get_clean();
-});
-
 add_shortcode('az_login', function () {
     ob_start();
     include ALMAZEN_PATH . 'views/login.php';
-    return ob_get_clean();
-});
-
-add_shortcode('az_recuperar_password', function () {
-    ob_start();
-    include ALMAZEN_PATH . 'views/recuperar-password.php';
     return ob_get_clean();
 });
 
@@ -98,5 +85,23 @@ add_shortcode('az_registrar_producto', function () {
 add_shortcode('az_editar_producto', function () {
     ob_start();
     include ALMAZEN_PATH . 'views/editar-producto.php';
+    return ob_get_clean();
+});
+
+add_shortcode('az_revisar_cambios', function () {
+    ob_start();
+    include ALMAZEN_PATH . 'views/revisar-cambios.php';
+    return ob_get_clean();
+});
+
+add_shortcode('az_usuarios', function () {
+    ob_start();
+    include ALMAZEN_PATH . 'views/usuarios.php';
+    return ob_get_clean();
+});
+
+add_shortcode('az_editar_usuario', function () {
+    ob_start();
+    include ALMAZEN_PATH . 'views/editar-usuario.php';
     return ob_get_clean();
 });
