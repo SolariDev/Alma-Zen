@@ -1,4 +1,8 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 $auth = new Autenticacion();
 $usuario = $auth->usuarioActual();
 
@@ -7,7 +11,7 @@ if (!$usuario || ($usuario['rol'] ?? '') !== 'admin') {
     exit;
 }
 
-if (isset($_POST['logout'])) {
+if (isset($_POST['logout']) && wp_verify_nonce($_POST['az_nonce'] ?? '', 'az_logout')) {
     $auth->logout();
     wp_redirect(home_url('/inicio'));
     exit;
@@ -16,8 +20,12 @@ if (isset($_POST['logout'])) {
 $mensaje = '';
 
 if (isset($_POST['eliminar'])) {
-    $id_eliminar = intval($_POST['id']);
-    $mensaje = $auth->eliminarUsuario($id_eliminar, (int) $usuario['id']);
+    if (!wp_verify_nonce($_POST['az_nonce'] ?? '', 'az_gestion_usuarios')) {
+        $mensaje = '⚠️ Inactividad prolongada. Probá de nuevo.';
+    } else {
+        $id_eliminar = intval($_POST['id']);
+        $mensaje = $auth->eliminarUsuario($id_eliminar, (int) $usuario['id']);
+    }
 }
 
 $usuarios = $auth->listarUsuarios();
@@ -62,6 +70,7 @@ $totalAdmins = count(array_filter($usuarios, function ($u) {
 
                     <?php if ($puede_eliminar) : ?>
                         <form method="post">
+                            <?php wp_nonce_field('az_gestion_usuarios', 'az_nonce'); ?>
                             <input type="hidden" name="id" value="<?php echo (int) $u['id']; ?>">
                             <button type="submit" name="eliminar" class="az-btn az-btn-danger"
                                     onclick="return confirm('¿Seguro que querés eliminar a <?php echo esc_js($u['nombre']); ?>?');">
@@ -78,6 +87,7 @@ $totalAdmins = count(array_filter($usuarios, function ($u) {
         </div>
 
         <form method="post" class="az-text-center">
+            <?php wp_nonce_field('az_logout', 'az_nonce'); ?>
             <button type="submit" name="logout" class="az-btn az-btn-secondary az-btn-sm">Cerrar sesión</button>
         </form>
 

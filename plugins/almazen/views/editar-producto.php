@@ -1,4 +1,8 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 $auth = new Autenticacion();
 $usuario = $auth->usuarioActual();
 
@@ -10,8 +14,6 @@ if (!$usuario) {
 $es_admin  = ($usuario['rol'] ?? '') === 'admin';
 $url_panel = home_url($es_admin ? '/panel-admin' : '/panel-usuario');
 
-global $wpdb;
-$tabla = $wpdb->prefix . 'alm_productos';
 $productosModel = new Productos();
 
 $producto = null;
@@ -22,7 +24,12 @@ $accion_post = false;
 // Guardar cambios
 if (isset($_POST['guardar'])) {
     $accion_post = true;
-    $id    = intval($_POST['id']);
+    $id = absint($_POST['id'] ?? 0);
+
+    if (!wp_verify_nonce($_POST['az_nonce'] ?? '', 'az_editar_producto')) {
+        $mensaje = '⚠️ La página quedó abierta demasiado tiempo. Volvé a intentar.';
+        $producto = $productosModel->obtener($id);
+    } else {
     $datos = [
         'nombre'   => sanitize_text_field($_POST['nombre']),
         'precio'   => intval(str_replace('$ ', '', $_POST['precio'])),
@@ -33,55 +40,86 @@ if (isset($_POST['guardar'])) {
     ];
 
     if ($es_admin) {
-        // El admin edita directo
-        $wpdb->update(
-            $tabla,
-            $datos + ['fecha_actualizacion' => current_time('mysql')],
-            ['id' => $id],
-            ['%s', '%d', '%s', '%s', '%s', '%s', '%s'],
-            ['%d']
+        // El admin edita directamente el producto.
+        $resultado = $productosModel->actualizar(
+            $id,
+            $datos,
+            (int) $usuario['id']
         );
-        $mensaje = '✅ Producto actualizado correctamente.';
+
+        $mensaje = $resultado
+            ? '✅ Producto actualizado correctamente.'
+            : '❌ No se pudo actualizar el producto.';
+
     } else {
-        // El usuario común solo genera una solicitud pendiente
-        $res = $productosModel->solicitarCambio($id, $datos, (int) $usuario['id']);
+        // El usuario común solo genera una solicitud pendiente.
+        $res = $productosModel->solicitarCambio(
+            $id,
+            $datos,
+            (int) $usuario['id']
+        );
+
         $mensajes = [
             'ok'           => '📨 Tu cambio quedó pendiente de aprobación del administrador.',
             'sin_cambios'  => 'No hay cambios para enviar.',
             'ya_pendiente' => 'Este producto ya tiene un cambio pendiente de aprobación.',
             'error'        => '❌ No se pudo enviar el cambio.',
         ];
+
         $mensaje = $mensajes[$res] ?? $mensajes['error'];
     }
 
-    $producto = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tabla WHERE id = %d", $id), ARRAY_A);
-}
+    // Volver a cargar el producto usando el modelo.
+    $producto = $productosModel->obtener($id);
 
-// Eliminar (solo admin)
-if (isset($_POST['eliminar']) && $es_admin) {
-    $accion_post = true;
-    $id = intval($_POST['id']);
-    $wpdb->delete($tabla, ['id' => $id], ['%d']);
-    $mensaje  = '🗑️ Producto eliminado correctamente.';
-    $producto = null;
-}
+    }
+} elseif (isset($_POST['eliminar']) && $es_admin) {
 
-// Solo miramos la URL (buscador o selección puntual) si esto NO vino de guardar/eliminar
-if (!$accion_post) {
-    if (isset($_GET['id'])) {
-        $id = intval($_GET['id']);
-        $producto = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tabla WHERE id = %d", $id), ARRAY_A);
+        $accion_post = true;
+        $id = absint($_POST['id'] ?? 0);
 
-    } elseif (isset($_GET['q'])) {
-        $termino    = sanitize_text_field($_GET['q']);
-        $resultados = $productosModel->buscarPorNombre($termino);
+        if (!wp_verify_nonce($_POST['az_nonce'] ?? '', 'az_editar_producto')) {
 
-        if (count($resultados) === 1) {
-            $producto   = $resultados[0];
-            $resultados = [];
+            $mensaje = '⚠️ Inactividad prolongada. Volvé a intentar.';
+            $producto = $productosModel->obtener($id);
+
+        } else {
+
+            $resultado = $productosModel->eliminar(
+                $id,
+                (int) $usuario['id']
+            );
+
+            if ($resultado) {
+                $mensaje = '🗑️ Producto eliminado correctamente.';
+                $producto = null;
+            } else {
+                $mensaje = '❌ No se pudo eliminar el producto.';
+                $producto = $productosModel->obtener($id);
+            }
         }
     }
-}
+
+    // Solo miramos la URL (buscador o selección puntual)
+    // si esto NO vino de guardar/eliminar.
+    if (!$accion_post) {
+
+        if (isset($_GET['id'])) {
+
+            $id = absint($_GET['id']);
+            $producto = $productosModel->obtener($id);
+
+        } elseif (isset($_GET['q'])) {
+
+            $termino = sanitize_text_field(wp_unslash($_GET['q']));
+            $resultados = $productosModel->buscarPorNombre($termino);
+
+            if (count($resultados) === 1) {
+                $producto = $resultados[0];
+                $resultados = [];
+            }
+        }
+    }
 ?>
 
 <div class="az-page az-auth">
@@ -121,6 +159,7 @@ if (!$accion_post) {
 
         <?php if ($producto) : ?>
             <form method="post" class="az-form">
+                <?php wp_nonce_field('az_editar_producto', 'az_nonce'); ?>
                 <input type="hidden" name="id" value="<?php echo esc_attr($producto['id']); ?>">
 
                 <?php if (!$es_admin) : ?>

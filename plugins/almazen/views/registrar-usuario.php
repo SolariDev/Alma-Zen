@@ -1,4 +1,8 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 $auth = new Autenticacion();
 $usuarioActual = $auth->usuarioActual();
 
@@ -11,6 +15,9 @@ if (!$usuarioActual || ($usuarioActual['rol'] ?? '') !== 'admin') {
 $mensaje = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!wp_verify_nonce($_POST['az_nonce'] ?? '', 'az_registrar_usuario')) {
+        $mensaje = '⚠️ Inactividad prolongada. Probá de nuevo.';
+    } else {
     // El rol se decide según cuál de los dos botones se apretó.
     $rol = isset($_POST['crear_admin']) ? 'admin' : 'usuario';
 
@@ -28,16 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     window.location.href='" . esc_url(home_url('/usuarios')) . "';
                 }, 1500);
               </script>";
+        }      
     }
 }
 ?>
 
 <div class="az-page az-auth">
     <div class="az-container">
-
-        <div class="az-logo">
-            <img src="<?php echo ALMAZEN_URL . 'assets/img/logo-az.png'; ?>" alt="Alma-Zen" />
-        </div>
 
         <div class="az-form">
             <h2 class="az-title az-text-center az-mb-lg">Agregar usuario</h2>
@@ -47,9 +51,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="post" action="">
+                <?php wp_nonce_field('az_registrar_usuario', 'az_nonce'); ?>
                 <input type="text" name="az_nombre" class="az-input az-mb-md" placeholder="Nombre" autocomplete="off" required>
                 <input type="email" name="az_email" class="az-input az-mb-md" placeholder="Email" autocomplete="off" required>
-                <input type="password" name="az_password" class="az-input az-mb-lg" placeholder="Contraseña" autocomplete="new-password" required>
+                <input type="password" id="az_password" name="az_password" class="az-input az-mb-lg" placeholder="Contraseña" autocomplete="new-password" required>
+
+                <label class="az-label az-mb-lg">
+                    <input type="checkbox"
+                           onclick="document.getElementById('az_password').type = this.checked ? 'text' : 'password';">
+                    Mostrar contraseña
+                </label>
 
                 <div class="az-botones">
                     <button type="submit" name="crear_usuario" class="az-btn az-btn-primary">

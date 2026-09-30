@@ -1,4 +1,8 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 $auth = new Autenticacion();
 $usuario = $auth->usuarioActual();
 
@@ -12,16 +16,20 @@ $productosModel = new Productos();
 $mensaje = '';
 
 if (isset($_POST['aprobar']) || isset($_POST['rechazar'])) {
-    $cambio_id = intval($_POST['cambio_id']);
-
-    if (isset($_POST['aprobar'])) {
-        $mensaje = $productosModel->aprobarCambio($cambio_id, (int) $usuario['id'])
-            ? '✅ Cambio aprobado y aplicado al producto.'
-            : '❌ No se pudo aprobar el cambio.';
+    if (!wp_verify_nonce($_POST['az_nonce'] ?? '', 'az_revisar_cambios')) {
+        $mensaje = '⚠️ Inactividad prolongada. Probá de nuevo.';
     } else {
-        $mensaje = $productosModel->rechazarCambio($cambio_id, (int) $usuario['id'])
-            ? '🗑️ Cambio descartado.'
-            : '❌ No se pudo descartar el cambio.';
+        $cambio_id = intval($_POST['cambio_id']);
+
+        if (isset($_POST['aprobar'])) {
+            $mensaje = $productosModel->aprobarCambio($cambio_id, (int) $usuario['id'])
+                ? '✅ Cambio aprobado y aplicado al producto.'
+                : '❌ No se pudo aprobar el cambio.';
+        } else {
+            $mensaje = $productosModel->rechazarCambio($cambio_id, (int) $usuario['id'])
+                ? '🗑️ Cambio descartado.'
+                : '❌ No se pudo descartar el cambio.';
+        }
     }
 }
 
@@ -74,6 +82,7 @@ $campos = [
                 <?php endforeach; ?>
 
                 <form method="post" class="az-botones">
+                    <?php wp_nonce_field('az_revisar_cambios', 'az_nonce'); ?>
                     <input type="hidden" name="cambio_id" value="<?php echo (int) $c['id']; ?>">
                     <button type="submit" name="aprobar" class="az-btn az-btn-primary">Aprobar</button>
                     <button type="submit" name="rechazar" class="az-btn az-btn-danger">Descartar</button>

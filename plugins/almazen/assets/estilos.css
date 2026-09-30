@@ -230,3 +230,28 @@ body {
   width: 20px;
   height: 20px;
 }
+
+/* =======================================================
+11. PANELES (grupos de botones e indicadores)
+======================================================= */
+/* Etiqueta chica que agrupa botones (Productos, Administración) */
+.az-seccion {
+  margin-bottom: var(--space-xs);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+/* Contador dentro de un botón (ej. cambios pendientes) */
+.az-badge {
+  display: inline-block;
+  min-width: 22px;
+  margin-left: var(--space-xs);
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 22px;
+  text-align: center;
+}

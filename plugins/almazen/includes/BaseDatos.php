@@ -1,4 +1,8 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 class BaseDatos {
 
     /** @var mixed $wpdb */
@@ -33,11 +37,9 @@ class BaseDatos {
             nombre VARCHAR(100) NOT NULL,
             precio INT UNSIGNED NOT NULL DEFAULT 0,
             cantidad DECIMAL(6,2) NOT NULL, 
-            unidad ENUM('ml','lt','cc.','gr','kg','unidad') NOT NULL DEFAULT 'unidad',
+            unidad ENUM('ml','lt','cc','gr','kg','unidad') NOT NULL DEFAULT 'unidad',
             empaque ENUM('','pack','pack4','pack6','pack12','bolsa','caja','lata','petaca','tarrina') DEFAULT '',
             marca VARCHAR(100) DEFAULT '',
-            proveedor VARCHAR(100) DEFAULT '',
-            categoria VARCHAR(100) DEFAULT '',
             fecha_actualizacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             INDEX idx_nombre (nombre)

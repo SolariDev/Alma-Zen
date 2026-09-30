@@ -1,3 +1,9 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+?>
+
 <div class="az-page az-auth">
     <div class="az-container">
         <div class="az-logo">

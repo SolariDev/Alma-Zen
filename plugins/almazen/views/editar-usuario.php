@@ -1,4 +1,8 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 $auth = new Autenticacion();
 $usuario = $auth->usuarioActual();
 
@@ -18,19 +22,23 @@ if (!$usuarioEditar) {
 $mensaje = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar'])) {
-    $mensaje = $auth->actualizarUsuario(
-        $id,
-        $_POST['az_email'] ?? '',
-        $_POST['az_password'] ?? ''
-    );
+    if (!wp_verify_nonce($_POST['az_nonce'] ?? '', 'az_editar_usuario')) {
+        $mensaje = '⚠️ Inactividad prolongada. Probá de nuevo.';
+    } else {
+        $mensaje = $auth->actualizarUsuario(
+            $id,
+            $_POST['az_email'] ?? '',
+            $_POST['az_password'] ?? ''
+        );
 
-    if ($mensaje === "Usuario actualizado correctamente.") {
-        $usuarioEditar = $auth->obtenerUsuario($id);
-        echo "<script>
-                setTimeout(() => {
-                    window.location.href='" . esc_url(home_url('/usuarios')) . "';
-                }, 1500);
-              </script>";
+        if ($mensaje === "Usuario actualizado correctamente.") {
+            $usuarioEditar = $auth->obtenerUsuario($id);
+            echo "<script>
+                    setTimeout(() => {
+                        window.location.href='" . esc_url(home_url('/usuarios')) . "';
+                    }, 1500);
+                  </script>";
+        }
     }
 }
 ?>
@@ -51,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar'])) {
             </p>
 
             <form method="post" action="">
+                <?php wp_nonce_field('az_editar_usuario', 'az_nonce'); ?>
                 <input type="hidden" name="id" value="<?php echo (int) $usuarioEditar['id']; ?>">
 
                 <label for="az_email" class="az-label">Email</label>
@@ -58,8 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar'])) {
                        value="<?php echo esc_attr($usuarioEditar['email']); ?>" required>
 
                 <label for="az_password" class="az-label">Nueva contraseña (dejar vacío para no cambiarla)</label>
-                <input type="password" id="az_password" name="az_password" class="az-input az-mb-sm"
-                       autocomplete="new-password">
+                <input type="password" id="az_password" name="az_password" class="az-input az-mb-sm" autocomplete="new-password">
 
                 <label class="az-label az-mb-lg">
                     <input type="checkbox"

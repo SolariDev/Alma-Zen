@@ -1,4 +1,8 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 $auth = new Autenticacion();
 $usuario = $auth->usuarioActual();
 
@@ -7,15 +11,22 @@ if (!$usuario) {
     exit;
 }
 
+// Cerrar sesión (solo si el nonce del formulario es válido)
 if (isset($_POST['logout'])) {
-    $auth->logout();
-    wp_redirect(home_url('/inicio'));
-    exit;
+    if (isset($_POST['az_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['az_nonce'])), 'az_logout')) {
+        $auth->logout();
+        wp_redirect(home_url('/inicio'));
+        exit;
+    }
 }
 
 $productosModel = new Productos();
 $producto = null;
 $resultados = [];
+
+// Datos de la búsqueda (se sanitizan una sola vez, acá arriba)
+$buscando = isset($_GET['q']) || isset($_GET['id']);
+$termino  = isset($_GET['q']) ? sanitize_text_field(wp_unslash($_GET['q'])) : '';
 
 /* Buscar producto
  * Si viene ?id=xxx: mostramos directamente ese producto.
@@ -24,19 +35,10 @@ $resultados = [];
  * Si hay varias: mostramos las opciones para que el usuario elija.
  */
 if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
-
-    global $wpdb;
-    $tabla = $wpdb->prefix . 'alm_productos';
-
-    $producto = $wpdb->get_row(
-        $wpdb->prepare("SELECT * FROM $tabla WHERE id = %d",$id),
-        ARRAY_A
-    );
+    $id = absint($_GET['id']);
+    $producto = $productosModel->obtener($id);
 
 } elseif (isset($_GET['q'])) {
-
-    $termino = sanitize_text_field($_GET['q']);
 
     if ($termino !== '') {
         $resultados = $productosModel->buscarPorNombre($termino);
@@ -52,24 +54,17 @@ if (isset($_GET['id'])) {
 <div class="az-page az-auth">
     <div class="az-container">
 
-        <h2 class="az-title az-text-center az-mb-lg">
-            Panel de: <?php echo esc_html($usuario['nombre']); ?>
-        </h2>
-
-        <!-- Acciones de productos -->
-        <div class="az-botones az-mb-lg">
-            <a href="<?php echo esc_url(home_url('/registrar-producto')); ?>"
-               class="az-btn az-btn-secondary">Registrar producto</a>
-            <a href="<?php echo esc_url(home_url('/editar-producto')); ?>"
-               class="az-btn az-btn-secondary">Editar producto</a>
+        <!-- Encabezado: nombre y rol -->
+        <div class="az-text-center az-mb-lg">
+            <h2 class="az-title"><?php echo esc_html($usuario['nombre']); ?></h2>
+            <p class="az-subtitle">Usuario</p>
         </div>
 
         <!-- Buscador de productos -->
         <form method="get" action="<?php echo esc_url(home_url('/panel-usuario')); ?>" class="az-form">
             <div class="az-search">
-                <input type="search" name="q" id="az-busqueda" class="az-input" 
-                    placeholder="Buscar producto..." value="<?php echo isset($_GET['q']) ? 
-                        esc_attr($_GET['q']) : ''; ?>" required>
+                <input type="search" name="q" id="az-busqueda" class="az-input"
+                    placeholder="Buscar producto..." value="<?php echo esc_attr($termino); ?>" required>
                 <button type="submit" class="az-btn az-btn-primary az-btn-icon" aria-label="Buscar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="7"></circle>
@@ -89,8 +84,8 @@ if (isset($_GET['id'])) {
 
             <div class="az-botones az-mb-lg">
                 <?php foreach ($resultados as $r) : ?>
-                    <a href="<?php echo esc_url(add_query_arg( 'id', $r['id'], home_url('/panel-usuario'))); ?>" class="az-btn az-btn-secondary">
-                        <?php echo esc_html($r['nombre'] . ' — ' . ($r['marca'] ?? '') . ' — $' . $r['precio'] . ' — ' . $r['cantidad'] . ' ' . $r['unidad'] ); ?>
+                    <a href="<?php echo esc_url(add_query_arg('id', $r['id'], home_url('/panel-usuario'))); ?>" class="az-btn az-btn-secondary">
+                        <?php echo esc_html($r['nombre'] . ' — ' . ($r['marca'] ?? '') . ' — $' . $r['precio'] . ' — ' . $r['cantidad'] . ' ' . $r['unidad']); ?>
                     </a>
                 <?php endforeach; ?>
             </div>
@@ -122,19 +117,33 @@ if (isset($_GET['id'])) {
             </div>
 
         <!-- Sin resultados -->
-        <?php elseif (isset($_GET['q'])) : ?>
-            <p class="az-mensaje">No se encontró ningún producto con ese nombre.</p>
+        <?php elseif ($buscando) : ?>
+            <p class="az-mensaje">No se encontró ningún producto.</p>
         <?php endif; ?>
 
-        <!-- Volver al panel (solo si se hizo una búsqueda o hay un producto seleccionado) -->
-        <?php if (isset($_GET['q']) || isset($_GET['id'])) : ?>
-            <a href="<?php echo esc_url(home_url('/panel-usuario')); ?>" class="az-btn az-btn-secondary az-mb-md">Volver al panel</a>
+        <?php if ($buscando) : ?>
+
+            <!-- Volver al panel (solo si se hizo una búsqueda o hay un producto seleccionado) -->
+            <a href="<?php echo esc_url(home_url('/panel-usuario')); ?>" class="az-btn az-btn-secondary az-mb-lg">Volver al panel</a>
+
+        <?php else : ?>
+
+            <!-- Acciones de productos -->
+            <p class="az-seccion">Productos</p>
+            <div class="az-botones az-mb-lg">
+                <a href="<?php echo esc_url(home_url('/registrar-producto')); ?>"
+                   class="az-btn az-btn-secondary">Registrar</a>
+                <a href="<?php echo esc_url(home_url('/editar-producto')); ?>"
+                   class="az-btn az-btn-secondary">Editar</a>
+            </div>
+
         <?php endif; ?>
 
         <!-- Botón cerrar sesión -->
         <form method="post" class="az-text-center">
+            <?php wp_nonce_field('az_logout', 'az_nonce'); ?>
             <button type="submit" name="logout" class="az-btn az-btn-secondary az-btn-sm">Cerrar sesión</button>
         </form>
 
     </div>
-</div>               
+</div>              

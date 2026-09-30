@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Alma-Zen
  * Description: Sistema de inventario con roles de administrador y usuario.
@@ -62,12 +61,6 @@ add_shortcode('az_registrar_usuario', function () {
 add_shortcode('az_login', function () {
     ob_start();
     include ALMAZEN_PATH . 'views/login.php';
-    return ob_get_clean();
-});
-
-add_shortcode('az_recuperar_password', function () {
-    ob_start();
-    include ALMAZEN_PATH . 'views/recuperar-password.php';
     return ob_get_clean();
 });
 

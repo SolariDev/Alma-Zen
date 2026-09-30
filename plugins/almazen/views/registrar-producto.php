@@ -1,4 +1,8 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 $auth = new Autenticacion();
 $usuario = $auth->usuarioActual();
 
@@ -10,41 +14,35 @@ if (!$usuario) {
 $es_admin  = ($usuario['rol'] ?? '') === 'admin';
 $url_panel = home_url($es_admin ? '/panel-admin' : '/panel-usuario');
 
-global $wpdb;
-$tabla_productos = $wpdb->prefix . 'alm_productos';
-
-$producto_guardado = false;
+$productosModel = new Productos();
 
 $mensaje = '';
 
 // Procesar formulario
 if ( isset($_POST['guardar_producto']) ) {
 
-    $nombre   = sanitize_text_field($_POST['nombre']);
-    $marca    = sanitize_text_field($_POST['marca']);
-    $precio   = intval($_POST['precio']);
-    $cantidad = floatval($_POST['cantidad']);
-    $unidad   = sanitize_text_field($_POST['unidad']);
-    $empaque  = sanitize_text_field($_POST['empaque']);
-        
-        $resultado = $wpdb->insert(
-            $tabla_productos,
-            [
-                'nombre'              => $nombre,
-                'marca'               => $marca,
-                'precio'              => $precio,
-                'cantidad'            => $cantidad,
-                'unidad'              => $unidad,
-                'empaque'             => $empaque,
-                'fecha_actualizacion' => current_time('mysql')
-            ],
-            ['%s', '%s', '%d', '%s','%s','%s','%s']
+    if (!wp_verify_nonce($_POST['az_nonce'] ?? '', 'az_registrar_producto')) {
+        $mensaje = '⚠️ Inactividad prolongada. Probá de nuevo.';
+    } else {
+        $datos = [
+            'nombre'   => sanitize_text_field($_POST['nombre'] ?? ''),
+            'marca'    => sanitize_text_field($_POST['marca'] ?? ''),
+            'precio'   => intval($_POST['precio'] ?? 0),
+            'cantidad' => floatval($_POST['cantidad'] ?? 0),
+            'unidad'   => sanitize_text_field($_POST['unidad'] ?? ''),
+            'empaque'  => sanitize_text_field($_POST['empaque'] ?? ''),
+        ];
+
+        $resultado = $productosModel->crear(
+            $datos,
+            (int) $usuario['id']
         );
 
-        $mensaje = ($resultado === false)
-        ? '❌ Error al guardar: ' . esc_html($wpdb->last_error)
-        : '✅ Producto guardado correctamente.';
+        $mensaje = $resultado
+            ? '✅ Producto guardado correctamente.'
+            : '❌ No se pudo guardar el producto.';
     }
+}
 ?>
 
 <div class="az-page az-auth">
@@ -53,10 +51,12 @@ if ( isset($_POST['guardar_producto']) ) {
         <h2 class="az-title az-text-center az-mb-lg">Registrar producto</h2>
 
         <?php if ($mensaje) : ?>
-            <p class="az-mensaje"><?php echo $mensaje; ?></p>
+            <p class="az-mensaje"><?php echo esc_html($mensaje); ?></p>
         <?php endif; ?>
 
         <form method="post" class="az-form">
+            <?php wp_nonce_field('az_registrar_producto', 'az_nonce'); ?>
+            
             <label for="nombre" class="az-label">Nombre</label>
             <input type="text" id="nombre" name="nombre" class="az-input az-mb-md" required>
 
