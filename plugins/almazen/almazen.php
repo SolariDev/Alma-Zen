@@ -58,12 +58,6 @@ add_shortcode('az_registrar_usuario', function () {
     return ob_get_clean();
 });
 
-add_shortcode('az_login', function () {
-    ob_start();
-    include ALMAZEN_PATH . 'views/login.php';
-    return ob_get_clean();
-});
-
 add_shortcode('az_panel_usuario', function () {
     ob_start();
     include ALMAZEN_PATH . 'views/panel-usuario.php';

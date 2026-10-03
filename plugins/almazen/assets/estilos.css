@@ -8,13 +8,18 @@
   --bg-main: #ffffff;
   --bg-surface: #ffffff;
   --bg-input: #f4f4f5;
+  --bg-input-hover: #eeeef0;
   /* Bordes */
   --border-color: #e2e2e2;
+  --border-input: #dcdce0;
   /* Texto */
   --text-primary: #1a1a1a;
   --text-secondary: #6b7280;
+  --text-placeholder: #a1a1aa;
   /* Acciones */
   --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-soft: rgba(59, 130, 246, 0.18);
   --danger: #ef4444;
   /* Radios */
   --radius-md: 12px;
@@ -24,6 +29,8 @@
   --space-sm: 12px;
   --space-md: 14px;
   --space-lg: 20px;
+  /* Sombras */
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 16px rgba(16, 24, 40, 0.05);
   /* Transiciones */
   --transition: 0.2s ease;
 }
@@ -42,12 +49,14 @@
 ======================================================= */
 html {
   font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 body {
   background: var(--bg-main);
   color: var(--text-primary);
   font-family: 'Inter', 'Segoe UI', sans-serif;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* =======================================================
@@ -60,9 +69,9 @@ body {
 }
 .az-container {
   width: 100%;
-  max-width: 380px;
+  max-width: 420px;
   margin: 0 auto;
-  padding: var(--space-md);
+  padding: var(--space-lg) var(--space-md) 40px;
 }
 
 /* =======================================================
@@ -70,12 +79,15 @@ body {
 ======================================================= */
 .az-title {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: var(--text-primary) !important;
 }
 .az-subtitle {
+  margin-top: 2px;
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 /* =======================================================
@@ -89,28 +101,113 @@ body {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
 }
+
+/* Cada campo (label + input) */
+.az-field {
+  margin-bottom: 18px;
+}
+
+/* Dos campos en la misma fila */
+.az-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+.az-row .az-field {
+  min-width: 0;
+}
+
 .az-label {
   display: block;
   margin-bottom: 6px;
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
-.az-input {
+.az-label small {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Inputs y selects (con !important para ganarle a los estilos del tema de WordPress) */
+.az-auth .az-input {
+  display: block;
   width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border-color);
+  height: 48px;
+  padding: 0 14px !important;
+  border: 1.5px solid var(--border-input) !important;
+  border-radius: var(--radius-md) !important;
+  background-color: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  font-family: inherit;
+  font-size: 1rem; /* 16px evita el zoom automático en iPhone */
+  line-height: 1.5;
+  box-shadow: none !important;
+  transition: var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.az-auth .az-input::placeholder {
+  color: var(--text-placeholder);
+}
+.az-auth .az-input:hover {
+  background-color: var(--bg-input-hover) !important;
+}
+.az-auth .az-input:focus {
+  outline: none;
+  border-color: var(--primary) !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px var(--primary-soft) !important;
+}
+
+/* Select con flecha propia */
+.az-auth select.az-input {
+  padding-right: 40px !important;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+/* Sin flechitas en los campos numéricos */
+.az-auth input[type="number"].az-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.az-auth input[type="number"].az-input::-webkit-outer-spin-button,
+.az-auth input[type="number"].az-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Campo con prefijo (ej. $ en el precio) */
+.az-input-group {
+  position: relative;
+}
+.az-input-prefix {
+  position: absolute;
+  top: 0;
+  left: 14px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  font-weight: 500;
+  pointer-events: none;
+}
+.az-auth .az-input-group .az-input {
+  padding-left: 32px !important;
+}
+
+.az-mensaje {
+  margin-bottom: var(--space-md);
+  padding: 10px 14px;
   border-radius: var(--radius-md);
   background: var(--bg-input);
-  color: var(--text-primary);
-  font-family: inherit;
-}
-.az-input:focus {
-  outline: none;
-  border-color: var(--primary);
-}
-.az-mensaje {
   text-align: center;
-  margin-bottom: var(--space-md);
   font-size: 0.9rem;
   color: var(--text-secondary);
 }
@@ -119,14 +216,19 @@ body {
 7. BOTONES
 ======================================================= */
 .az-btn {
-  display: inline-block !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
   width: 100% !important;
+  min-height: 48px;
   text-align: center !important;
   text-decoration: none;
   cursor: pointer;
   padding: 12px 16px;
   border-radius: var(--radius-md);
   transition: var(--transition);
+  font-family: inherit;
+  font-size: 1rem;
   font-weight: 600;
   box-sizing: border-box;
 }
@@ -135,10 +237,17 @@ body {
   outline: none !important;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35) !important;
 }
+.az-btn:active {
+  transform: translateY(1px);
+}
 .az-btn-primary {
   background: var(--primary) !important;
   color: #ffffff !important;
   border: 1.5px solid var(--primary) !important;
+}
+.az-btn-primary:hover {
+  background: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
 }
 .az-btn-secondary {
   background: var(--bg-main) !important;
@@ -156,7 +265,8 @@ body {
 }
 .az-btn-sm {
   width: auto !important;
-  display: inline-block !important;
+  display: inline-flex !important;
+  min-height: 0;
   padding: 8px 24px !important;
 }
 .az-link {
@@ -170,6 +280,11 @@ body {
 }
 .az-link:hover {
   text-decoration: underline;
+}
+
+/* Botón principal al final de un formulario */
+.az-form-actions {
+  margin-top: 24px;
 }
 
 /* =======================================================
@@ -231,6 +346,11 @@ body {
   height: 20px;
 }
 
+/* Resultados en vivo: separados del campo de búsqueda */
+.az-resultados-live {
+  margin-top: var(--space-md);
+}
+
 /* =======================================================
 11. PANELES (grupos de botones e indicadores)
 ======================================================= */
@@ -254,4 +374,136 @@ body {
   font-weight: 600;
   line-height: 22px;
   text-align: center;
+}
+
+/* =======================================================
+12. NAVEGACIÓN
+======================================================= */
+.az-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: var(--space-lg);
+}
+
+.az-header .az-title {
+  margin: 0;
+}
+
+/* Botón volver: círculo con borde suave y flecha SVG */
+.az-back {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-primary);
+  background: var(--bg-main);
+  border: 1.5px solid var(--border-color);
+
+  text-decoration: none;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.az-back svg {
+  width: 20px;
+  height: 20px;
+}
+
+.az-back:hover {
+  background: var(--bg-input);
+  border-color: var(--border-input);
+}
+
+.az-back:active {
+  transform: scale(0.96);
+}
+
+.az-back:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+}
+
+/* Encabezado con flecha a la izquierda y título centrado */
+.az-header-centro {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+}
+.az-header-espacio {
+  display: block;
+  width: 44px;
+  height: 44px;
+}
+
+/* =======================================================
+13. FICHA DE PRODUCTO (detalle en solo lectura)
+======================================================= */
+.az-ficha-titulo {
+  margin-bottom: var(--space-xs);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+.az-ficha-fila {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bg-input);
+  font-size: 0.95rem;
+}
+.az-ficha-fila:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.az-ficha-etiqueta {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+.az-ficha-valor {
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* =======================================================
+14. CAMBIOS PENDIENTES (comparación antes → después)
+======================================================= */
+.az-cambio {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bg-input);
+}
+.az-cambio-etiqueta {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.az-cambio-valores {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-size: 0.95rem;
+}
+.az-cambio-antes {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+}
+.az-cambio-flecha {
+  color: var(--text-secondary);
+}
+.az-cambio-nuevo {
+  font-weight: 600;
+  color: var(--text-primary);
 }

@@ -43,25 +43,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="az-page az-auth">
     <div class="az-container">
 
-        <div class="az-form">
-            <h2 class="az-title az-text-center az-mb-lg">Agregar usuario</h2>
+        <div class="az-header">
+            <div>
+                <h2 class="az-title">Agregar usuario</h2>
+                <p class="az-subtitle">Completá los datos de la persona</p>
+            </div>
 
-            <?php if ($mensaje && $mensaje !== "Usuario registrado correctamente.") : ?>
-                <p class="az-mensaje"><?php echo esc_html($mensaje); ?></p>
-            <?php endif; ?>
+            <a href="<?php echo esc_url(home_url('/usuarios')); ?>" class="az-back" aria-label="Volver a usuarios">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 12H5"></path>
+                    <path d="m12 19-7-7 7-7"></path>
+                </svg>
+            </a>
+        </div>
 
-            <form method="post" action="">
-                <?php wp_nonce_field('az_registrar_usuario', 'az_nonce'); ?>
-                <input type="text" name="az_nombre" class="az-input az-mb-md" placeholder="Nombre" autocomplete="off" required>
-                <input type="email" name="az_email" class="az-input az-mb-md" placeholder="Email" autocomplete="off" required>
-                <input type="password" id="az_password" name="az_password" class="az-input az-mb-lg" placeholder="Contraseña" autocomplete="new-password" required>
+        <?php if ($mensaje && $mensaje !== "Usuario registrado correctamente.") : ?>
+            <p class="az-mensaje"><?php echo esc_html($mensaje); ?></p>
+        <?php endif; ?>
 
-                <label class="az-label az-mb-lg">
-                    <input type="checkbox"
-                           onclick="document.getElementById('az_password').type = this.checked ? 'text' : 'password';">
-                    Mostrar contraseña
-                </label>
+        <form method="post" action="" class="az-form">
+            <?php wp_nonce_field('az_registrar_usuario', 'az_nonce'); ?>
 
+            <div class="az-field">
+                <label for="az_nombre" class="az-label">Nombre</label>
+                <input type="text" id="az_nombre" name="az_nombre" class="az-input" placeholder="Nombre" autocomplete="off" required>
+            </div>
+
+            <div class="az-field">
+                <label for="az_email" class="az-label">Email</label>
+                <input type="email" id="az_email" name="az_email" class="az-input" placeholder="nombre@correo.com" autocomplete="off" required>
+            </div>
+
+            <div class="az-field">
+                <label for="az_password" class="az-label">Contraseña</label>
+                <input type="password" id="az_password" name="az_password" class="az-input" placeholder="Contraseña" autocomplete="new-password" required>
+            </div>
+
+            <label class="az-label">
+                <input type="checkbox"
+                       onclick="document.getElementById('az_password').type = this.checked ? 'text' : 'password';">
+                Mostrar contraseña
+            </label>
+
+            <div class="az-form-actions">
                 <div class="az-botones">
                     <button type="submit" name="crear_usuario" class="az-btn az-btn-primary">
                         Crear usuario
@@ -71,9 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Crear administrador
                     </button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
 
-        <a href="<?php echo esc_url(home_url('/usuarios')); ?>" class="az-btn az-btn-secondary">Volver a usuarios</a>
     </div>
 </div>

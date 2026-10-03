@@ -48,7 +48,19 @@ $campos = [
 <div class="az-page az-auth">
     <div class="az-container">
 
-        <h2 class="az-title az-text-center az-mb-lg">Cambios pendientes</h2>
+        <div class="az-header">
+            <div>
+                <h2 class="az-title">Cambios pendientes</h2>
+                <p class="az-subtitle">Revisá las solicitudes de los usuarios</p>
+            </div>
+
+            <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-back" aria-label="Volver al panel">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 12H5"></path>
+                    <path d="m12 19-7-7 7-7"></path>
+                </svg>
+            </a>
+        </div>
 
         <?php if ($mensaje) : ?>
             <p class="az-mensaje"><?php echo esc_html($mensaje); ?></p>
@@ -62,11 +74,11 @@ $campos = [
             $antes = json_decode($c['datos_anteriores'], true) ?: [];
             $nuevo = json_decode($c['datos_nuevos'], true) ?: [];
         ?>
-            <div class="az-form az-mb-lg">
-                <h3 class="az-title az-mb-sm">
+            <div class="az-form">
+                <h3 class="az-ficha-titulo">
                     <?php echo esc_html($c['producto_nombre'] ?? ($antes['nombre'] ?? 'Producto eliminado')); ?>
                 </h3>
-                <p class="az-mb-md">
+                <p class="az-subtitle az-mb-sm">
                     Solicitado por <?php echo esc_html($c['solicitante'] ?? 'usuario eliminado'); ?>
                     — <?php echo esc_html(date('d/m/Y H:i', strtotime($c['fecha_solicitud']))); ?>
                 </p>
@@ -75,13 +87,17 @@ $campos = [
                     if (($antes[$k] ?? '') == ($nuevo[$k] ?? '')) {
                         continue;
                     } ?>
-                    <p class="az-mb-sm">
-                        <strong><?php echo esc_html($etiqueta); ?>:</strong>
-                        <?php echo esc_html($antes[$k] ?? '—'); ?> → <?php echo esc_html($nuevo[$k] ?? '—'); ?>
-                    </p>
+                    <div class="az-cambio">
+                        <span class="az-cambio-etiqueta"><?php echo esc_html($etiqueta); ?></span>
+                        <span class="az-cambio-valores">
+                            <span class="az-cambio-antes"><?php echo esc_html($antes[$k] ?? '—'); ?></span>
+                            <span class="az-cambio-flecha" aria-hidden="true">→</span>
+                            <span class="az-cambio-nuevo"><?php echo esc_html($nuevo[$k] ?? '—'); ?></span>
+                        </span>
+                    </div>
                 <?php endforeach; ?>
 
-                <form method="post" class="az-botones">
+                <form method="post" class="az-row az-form-actions">
                     <?php wp_nonce_field('az_revisar_cambios', 'az_nonce'); ?>
                     <input type="hidden" name="cambio_id" value="<?php echo (int) $c['id']; ?>">
                     <button type="submit" name="aprobar" class="az-btn az-btn-primary">Aprobar</button>
@@ -89,10 +105,6 @@ $campos = [
                 </form>
             </div>
         <?php endforeach; ?>
-
-        <div class="az-botones az-mb-lg">
-            <a href="<?php echo esc_url(home_url('/panel-admin')); ?>" class="az-btn az-btn-secondary">Volver al panel</a>
-        </div>
 
     </div>
 </div>

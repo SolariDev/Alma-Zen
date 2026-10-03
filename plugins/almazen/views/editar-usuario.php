@@ -46,40 +46,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar'])) {
 <div class="az-page az-auth">
     <div class="az-container">
 
-        <h2 class="az-title az-text-center az-mb-lg">Editar usuario</h2>
+        <div class="az-header">
+            <div>
+                <h2 class="az-title">Editar usuario</h2>
+                <p class="az-subtitle">
+                    <?php echo esc_html($usuarioEditar['nombre']); ?>
+                    — <?php echo $usuarioEditar['rol'] === 'admin' ? 'Administrador' : 'Usuario'; ?>
+                </p>
+            </div>
+
+            <a href="<?php echo esc_url(home_url('/usuarios')); ?>" class="az-back" aria-label="Volver a usuarios">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 12H5"></path>
+                    <path d="m12 19-7-7 7-7"></path>
+                </svg>
+            </a>
+        </div>
 
         <?php if ($mensaje) : ?>
             <p class="az-mensaje"><?php echo esc_html($mensaje); ?></p>
         <?php endif; ?>
 
-        <div class="az-form">
-            <p class="az-subtitle az-text-center az-mb-lg">
-                <strong><?php echo esc_html($usuarioEditar['nombre']); ?></strong>
-                — <?php echo $usuarioEditar['rol'] === 'admin' ? 'Administrador' : 'Usuario'; ?>
-            </p>
+        <form method="post" action="" class="az-form">
+            <?php wp_nonce_field('az_editar_usuario', 'az_nonce'); ?>
+            <input type="hidden" name="id" value="<?php echo (int) $usuarioEditar['id']; ?>">
 
-            <form method="post" action="">
-                <?php wp_nonce_field('az_editar_usuario', 'az_nonce'); ?>
-                <input type="hidden" name="id" value="<?php echo (int) $usuarioEditar['id']; ?>">
-
+            <div class="az-field">
                 <label for="az_email" class="az-label">Email</label>
-                <input type="email" id="az_email" name="az_email" class="az-input az-mb-md"
+                <input type="email" id="az_email" name="az_email" class="az-input"
                        value="<?php echo esc_attr($usuarioEditar['email']); ?>" required>
+            </div>
 
-                <label for="az_password" class="az-label">Nueva contraseña (dejar vacío para no cambiarla)</label>
-                <input type="password" id="az_password" name="az_password" class="az-input az-mb-sm" autocomplete="new-password">
+            <div class="az-field">
+                <label for="az_password" class="az-label">Nueva contraseña <small>(dejar vacío para no cambiarla)</small></label>
+                <input type="password" id="az_password" name="az_password" class="az-input" autocomplete="new-password">
+            </div>
 
-                <label class="az-label az-mb-lg">
-                    <input type="checkbox"
-                           onclick="document.getElementById('az_password').type = this.checked ? 'text' : 'password';">
-                    Mostrar contraseña
-                </label>
+            <label class="az-label">
+                <input type="checkbox"
+                       onclick="document.getElementById('az_password').type = this.checked ? 'text' : 'password';">
+                Mostrar contraseña
+            </label>
 
+            <div class="az-form-actions">
                 <button type="submit" name="guardar" class="az-btn az-btn-primary">Guardar cambios</button>
-            </form>
-        </div>
-
-        <a href="<?php echo esc_url(home_url('/usuarios')); ?>" class="az-btn az-btn-secondary">Volver a usuarios</a>
+            </div>
+        </form>
 
     </div>
 </div>

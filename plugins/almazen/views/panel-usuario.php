@@ -54,17 +54,32 @@ if (isset($_GET['id'])) {
 <div class="az-page az-auth">
     <div class="az-container">
 
-        <!-- Encabezado: nombre y rol -->
-        <div class="az-text-center az-mb-lg">
-            <h2 class="az-title"><?php echo esc_html($usuario['nombre']); ?></h2>
-            <p class="az-subtitle">Usuario</p>
+        <!-- Encabezado: flecha (solo al buscar), nombre y rol -->
+        <div class="az-header az-header-centro">
+            <span class="az-header-espacio"></span>
+
+            <div class="az-text-center">
+                <h2 class="az-title"><?php echo esc_html($usuario['nombre']); ?></h2>
+                <p class="az-subtitle">Usuario</p>
+            </div>
+
+            <?php if ($buscando) : ?>
+                <a href="<?php echo esc_url(home_url('/panel-usuario')); ?>" class="az-back" aria-label="Volver al panel">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M19 12H5"></path>
+                        <path d="m12 19-7-7 7-7"></path>
+                    </svg>
+                </a>
+            <?php else : ?>
+                <span class="az-header-espacio"></span>
+            <?php endif; ?>
         </div>
 
         <!-- Buscador de productos -->
         <form method="get" action="<?php echo esc_url(home_url('/panel-usuario')); ?>" class="az-form">
             <div class="az-search">
                 <input type="search" name="q" id="az-busqueda" class="az-input"
-                    placeholder="Buscar producto..." value="<?php echo esc_attr($termino); ?>" required>
+                    placeholder="Buscar producto..." value="<?php echo esc_attr($termino); ?>" autocomplete="off" required>
                 <button type="submit" class="az-btn az-btn-primary az-btn-icon" aria-label="Buscar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="7"></circle>
@@ -94,26 +109,48 @@ if (isset($_GET['id'])) {
         <?php elseif ($producto) : ?>
 
             <div class="az-form">
-                <h3 class="az-title az-mb-md"><?php echo esc_html($producto['nombre']); ?></h3>
+                <h3 class="az-ficha-titulo"><?php echo esc_html($producto['nombre']); ?></h3>
 
                 <?php if (!empty($producto['marca'])) : ?>
-                    <p class="az-mb-sm"><strong>Marca:</strong>
-                        <?php echo esc_html($producto['marca']); ?></p>
+                    <div class="az-ficha-fila">
+                        <span class="az-ficha-etiqueta">Marca</span>
+                        <span class="az-ficha-valor"><?php echo esc_html($producto['marca']); ?></span>
+                    </div>
                 <?php endif; ?>
 
-                <p class="az-mb-sm"><strong>Precio:</strong> $ <?php echo esc_html($producto['precio']); ?></p>
-                <p class="az-mb-sm"><strong>Cantidad:</strong> <?php echo esc_html($producto['cantidad']); ?></p>
-                <p class="az-mb-sm"><strong>Unidad:</strong> <?php echo esc_html($producto['unidad']); ?></p>
+                <div class="az-ficha-fila">
+                    <span class="az-ficha-etiqueta">Precio</span>
+                    <span class="az-ficha-valor">$ <?php echo esc_html($producto['precio']); ?></span>
+                </div>
+
+                <div class="az-ficha-fila">
+                    <span class="az-ficha-etiqueta">Cantidad</span>
+                    <span class="az-ficha-valor"><?php echo esc_html($producto['cantidad']); ?></span>
+                </div>
+
+                <div class="az-ficha-fila">
+                    <span class="az-ficha-etiqueta">Unidad</span>
+                    <span class="az-ficha-valor"><?php echo esc_html($producto['unidad']); ?></span>
+                </div>
 
                 <?php if (!empty($producto['empaque'])) : ?>
-                    <p class="az-mb-sm"><strong>Empaque:</strong> <?php echo esc_html($producto['empaque']); ?></p>
+                    <div class="az-ficha-fila">
+                        <span class="az-ficha-etiqueta">Empaque</span>
+                        <span class="az-ficha-valor"><?php echo esc_html($producto['empaque']); ?></span>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($producto['categoria'])) : ?>
-                    <p class="az-mb-sm"><strong>Categoría:</strong> <?php echo esc_html($producto['categoria']); ?></p>
+                    <div class="az-ficha-fila">
+                        <span class="az-ficha-etiqueta">Categoría</span>
+                        <span class="az-ficha-valor"><?php echo esc_html($producto['categoria']); ?></span>
+                    </div>
                 <?php endif; ?>
 
-                <p><strong>Última actualización:</strong> <?php echo esc_html(date('d/m/Y H:i', strtotime($producto['fecha_actualizacion']))); ?></p>
+                <div class="az-ficha-fila">
+                    <span class="az-ficha-etiqueta">Última actualización</span>
+                    <span class="az-ficha-valor"><?php echo esc_html(date('d/m/Y H:i', strtotime($producto['fecha_actualizacion']))); ?></span>
+                </div>
             </div>
 
         <!-- Sin resultados -->
@@ -121,12 +158,7 @@ if (isset($_GET['id'])) {
             <p class="az-mensaje">No se encontró ningún producto.</p>
         <?php endif; ?>
 
-        <?php if ($buscando) : ?>
-
-            <!-- Volver al panel (solo si se hizo una búsqueda o hay un producto seleccionado) -->
-            <a href="<?php echo esc_url(home_url('/panel-usuario')); ?>" class="az-btn az-btn-secondary az-mb-lg">Volver al panel</a>
-
-        <?php else : ?>
+        <?php if (!$buscando) : ?>
 
             <!-- Acciones de productos -->
             <p class="az-seccion">Productos</p>
@@ -146,4 +178,4 @@ if (isset($_GET['id'])) {
         </form>
 
     </div>
-</div>              
+</div>         

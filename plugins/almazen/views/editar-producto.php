@@ -125,7 +125,19 @@ if (isset($_POST['guardar'])) {
 <div class="az-page az-auth">
     <div class="az-container">
 
-        <h2 class="az-title az-text-center az-mb-lg">Editar producto</h2>
+        <div class="az-header">
+            <div>
+                <h2 class="az-title">Editar producto</h2>
+                <p class="az-subtitle">Buscá el producto que querés modificar</p>
+            </div>
+
+            <a href="<?php echo esc_url($url_panel); ?>" class="az-back" aria-label="Volver al panel">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 12H5"></path>
+                    <path d="m12 19-7-7 7-7"></path>
+                </svg>
+            </a>
+        </div>
 
         <?php if ($mensaje) : ?>
             <p class="az-mensaje"><?php echo esc_html($mensaje); ?></p>
@@ -134,7 +146,7 @@ if (isset($_POST['guardar'])) {
         <form method="get" action="<?php echo esc_url(home_url('/editar-producto')); ?>" class="az-form">
             <div class="az-search">
                 <input type="search" name="q" id="az-busqueda" class="az-input" placeholder="Buscar producto..."
-                    value="<?php echo isset($_GET['q']) ? esc_attr($_GET['q']) : ''; ?>" required>
+                    value="<?php echo isset($_GET['q']) ? esc_attr($_GET['q']) : ''; ?>" autocomplete="off" required>
                 <button type="submit" class="az-btn az-btn-primary az-btn-icon" aria-label="Buscar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="7"></circle>
@@ -167,65 +179,80 @@ if (isset($_POST['guardar'])) {
                 <input type="hidden" name="id" value="<?php echo esc_attr($producto['id']); ?>">
 
                 <?php if (!$es_admin) : ?>
-                    <p class="az-subtitle az-text-center az-mb-md">
+                    <p class="az-mensaje">
                         Los cambios que envíes quedarán pendientes hasta que los apruebe el administrador.
                     </p>
                 <?php endif; ?>
 
-                <label for="nombre" class="az-label">Nombre</label>
-                <input type="text" id="nombre" name="nombre" class="az-input az-mb-md" value="<?php echo esc_attr($producto['nombre']); ?>" required>
+                <div class="az-field">
+                    <label for="nombre" class="az-label">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" class="az-input" value="<?php echo esc_attr($producto['nombre']); ?>" autocomplete="off" required>
+                </div>
 
-                <label for="marca" class="az-label">Marca</label>
-                <input type="text" id="marca" name="marca" class="az-input az-mb-md" value="<?php echo esc_attr($producto['marca'] ?? ''); ?>">
+                <div class="az-field">
+                    <label for="marca" class="az-label">Marca <small>(opcional)</small></label>
+                    <input type="text" id="marca" name="marca" class="az-input" value="<?php echo esc_attr($producto['marca'] ?? ''); ?>" autocomplete="off">
+                </div>
 
-                <label for="empaque" class="az-label">Presentación / Empaque</label>
-                <select id="empaque" name="empaque" class="az-input az-mb-lg">
-                    <option value="" <?php selected($producto['empaque'], ''); ?>>Sin empaque</option>
-                    <option value="pack" <?php selected($producto['empaque'], 'pack'); ?>>Pack</option>
-                    <option value="pack4" <?php selected($producto['empaque'], 'pack4'); ?>>Pack de 4</option>
-                    <option value="pack6" <?php selected($producto['empaque'], 'pack6'); ?>>Pack de 6</option>
-                    <option value="pack12" <?php selected($producto['empaque'], 'pack12'); ?>>Pack de 12</option>
-                    <option value="bolsa" <?php selected($producto['empaque'], 'bolsa'); ?>>Bolsa</option>
-                    <option value="caja" <?php selected($producto['empaque'], 'caja'); ?>>Caja</option>
-                    <option value="lata" <?php selected($producto['empaque'], 'lata'); ?>>Lata</option>
-                    <option value="petaca" <?php selected($producto['empaque'], 'petaca'); ?>>Petaca</option>
-                    <option value="tarrina" <?php selected($producto['empaque'], 'tarrina'); ?>>Tarrina</option>
-                </select>
+                <div class="az-field">
+                    <label for="empaque" class="az-label">Presentación / Empaque</label>
+                    <select id="empaque" name="empaque" class="az-input">
+                        <option value="" <?php selected($producto['empaque'], ''); ?>>Sin empaque</option>
+                        <option value="pack" <?php selected($producto['empaque'], 'pack'); ?>>Pack</option>
+                        <option value="pack4" <?php selected($producto['empaque'], 'pack4'); ?>>Pack de 4</option>
+                        <option value="pack6" <?php selected($producto['empaque'], 'pack6'); ?>>Pack de 6</option>
+                        <option value="pack12" <?php selected($producto['empaque'], 'pack12'); ?>>Pack de 12</option>
+                        <option value="bolsa" <?php selected($producto['empaque'], 'bolsa'); ?>>Bolsa</option>
+                        <option value="caja" <?php selected($producto['empaque'], 'caja'); ?>>Caja</option>
+                        <option value="lata" <?php selected($producto['empaque'], 'lata'); ?>>Lata</option>
+                        <option value="petaca" <?php selected($producto['empaque'], 'petaca'); ?>>Petaca</option>
+                        <option value="tarrina" <?php selected($producto['empaque'], 'tarrina'); ?>>Tarrina</option>
+                    </select>
+                </div>
 
-                <label for="cantidad" class="az-label">Cantidad</label>
-                <input type="number" id="cantidad" name="cantidad" step="0.01" class="az-input az-mb-md" value="<?php echo esc_attr($producto['cantidad']); ?>" required>
+                <div class="az-row">
+                    <div class="az-field">
+                        <label for="cantidad" class="az-label">Cantidad</label>
+                        <input type="number" id="cantidad" name="cantidad" step="0.01" inputmode="decimal" class="az-input" value="<?php echo esc_attr($producto['cantidad']); ?>" required>
+                    </div>
 
-                <label for="unidad" class="az-label">Unidad</label>
-                <select id="unidad" name="unidad" class="az-input az-mb-md" required>
-                    <option value="lt" <?php selected($producto['unidad'], 'lt'); ?>>Lt.</option>
-                    <option value="ml" <?php selected($producto['unidad'], 'ml'); ?>>Ml.</option>
-                    <option value="cc" <?php selected($producto['unidad'], 'cc'); ?>>Cc.</option>
-                    <option value="kg" <?php selected($producto['unidad'], 'kg'); ?>>Kg.</option>
-                    <option value="gr" <?php selected($producto['unidad'], 'gr'); ?>>Gr.</option>
-                    <option value="unidad" <?php selected($producto['unidad'], 'unidad'); ?>>Unidad</option>
-                </select>
+                    <div class="az-field">
+                        <label for="unidad" class="az-label">Unidad</label>
+                        <select id="unidad" name="unidad" class="az-input" required>
+                            <option value="lt" <?php selected($producto['unidad'], 'lt'); ?>>Lt.</option>
+                            <option value="ml" <?php selected($producto['unidad'], 'ml'); ?>>Ml.</option>
+                            <option value="cc" <?php selected($producto['unidad'], 'cc'); ?>>Cc.</option>
+                            <option value="kg" <?php selected($producto['unidad'], 'kg'); ?>>Kg.</option>
+                            <option value="gr" <?php selected($producto['unidad'], 'gr'); ?>>Gr.</option>
+                            <option value="unidad" <?php selected($producto['unidad'], 'unidad'); ?>>Unidad</option>
+                        </select>
+                    </div>
+                </div>
 
-                <label for="precio" class="az-label">Precio</label>
-                <input type="text" id="precio" name="precio" class="az-input az-mb-md" value="<?php echo esc_attr($producto['precio']); ?>" required>
+                <div class="az-field">
+                    <label for="precio" class="az-label">Precio</label>
+                    <div class="az-input-group">
+                        <span class="az-input-prefix">$</span>
+                        <input type="text" id="precio" name="precio" inputmode="decimal" class="az-input" value="<?php echo esc_attr($producto['precio']); ?>" required>
+                    </div>
+                </div>
 
-                <div class="az-botones">
-                    <button type="submit" name="guardar" class="az-btn az-btn-primary">
-                        <?php echo $es_admin ? 'Guardar cambios' : 'Enviar para aprobación'; ?>
-                    </button>
-
-                    <?php if ($es_admin) : ?>
-                        <button type="submit" name="eliminar" class="az-btn az-btn-danger"
-                                onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
-                            Eliminar
+                <div class="az-form-actions">
+                    <div class="az-botones">
+                        <button type="submit" name="guardar" class="az-btn az-btn-primary">
+                            <?php echo $es_admin ? 'Guardar cambios' : 'Enviar para aprobación'; ?>
                         </button>
-                    <?php endif; ?>
+
+                        <?php if ($es_admin) : ?>
+                            <button type="submit" name="eliminar" class="az-btn az-btn-danger"
+                                    onclick="return confirm('¿Seguro que quieres eliminar este producto?');">
+                                Eliminar
+                            </button>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </form>
         <?php endif; ?>
-
-        <div class="az-botones az-mb-lg">
-            <a href="<?php echo esc_url($url_panel); ?>" class="az-btn az-btn-secondary">Volver al panel</a>
-        </div>
 
     </div>
 </div>
